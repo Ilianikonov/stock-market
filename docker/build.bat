@@ -1,1 +1,1 @@
-docker build . --tag stockbd
+docker build . --tag stockdb

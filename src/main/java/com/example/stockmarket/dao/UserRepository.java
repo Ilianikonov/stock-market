@@ -3,8 +3,6 @@ package com.example.stockmarket.dao;
 import com.example.stockmarket.entity.User;
 import com.example.stockmarket.filter.UserFilter;
 
-import java.util.List;
-
 public interface UserRepository {
     void clear();
     User createUser(User user);
