@@ -1,0 +1,1 @@
+docker run --name stock -d -p 8091:5432 stockbd:latest
