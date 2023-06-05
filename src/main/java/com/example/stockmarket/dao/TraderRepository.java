@@ -7,9 +7,5 @@ public interface TraderRepository {
     Trader createTrader(Trader trader);
     Trader updateTrader(Trader trader);
     Trader deleteTraderById(long id);
-    void buyCurrency(Trader trader, double count, Object object);
-    void saleCurrency(Trader trader, double count, Object object);
-    double valuationFinancialPortfolios(Trader trader, Object object);
-    double getBalance(Trader trader, Object object);
-    void upBalance(Trader trader, double count, Object object);
+    Trader getTraderById(long id);
 }

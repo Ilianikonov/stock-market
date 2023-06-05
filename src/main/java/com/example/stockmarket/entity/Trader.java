@@ -8,7 +8,7 @@ public class Trader {
     private final long id;
     private String name;
     private char[] password;
-    private List<Balance> financialPortfolios;
+    private List<Balance> totalBalance;
 
     public Trader(long id, String name, char[] password) {
         this.id = id;

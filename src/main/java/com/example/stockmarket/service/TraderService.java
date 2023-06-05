@@ -20,19 +20,4 @@ public class TraderService {
     public Trader deleteTraderById(long id){
         return traderRepository.deleteTraderById(id);
     }
-    public void buyCurrency(Trader trader, double count, Object object){
-        traderRepository.buyCurrency(trader, count, object);
-    }
-    public  void saleCurrency(Trader trader, double count, Object object){
-
-    }
-    public double valuationFinancialPortfolios(Trader trader, Object object){
-
-    }
-    public double getBalance(Trader trader, Object object){
-
-    }
-    public void upBalance(Trader trader, double count, Object object){
-
-    }
 }
