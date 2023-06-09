@@ -1,0 +1,5 @@
+FROM postgres:latest
+ENV POSTGRES_DB stock
+ENV POSTGRES_USER stock
+ENV POSTGRES_PASSWORD stock
+COPY init.sql docker-entrypoint-initdb.d/init.sql
