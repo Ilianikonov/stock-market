@@ -12,17 +12,21 @@ public class DatabaseTraderRepository implements TraderRepository{
 
     @Override
     public Trader createTrader(Trader trader) {
-        return null;
+       long traderId = jdbcTemplate.queryForObject("INSERT INTO trader(name,password)", new Object[]{trader.getName(), trader.getPassword()}, Long.class);
+        return jdbcTemplate.queryForObject("SELECT id, name, password FROM player WHERE player.id = ?", new Object[]{traderId}, new TraderMapper());
     }
 
     @Override
     public Trader updateTrader(Trader trader) {
-        return null;
+        jdbcTemplate.update("UPDATE trader SET name=?, password=? WHERE id = ?", new Object[]{trader.getName(),trader.getPassword(),trader.getId()});
+        return getTraderById(trader.getId());
     }
 
     @Override
     public Trader deleteTraderById(long id) {
-        return null;
+        Trader trader = getTraderById(id);
+        jdbcTemplate.update("DELETE FROM trader WHERE id = ?  ", id);
+        return trader;
     }
 
     @Override

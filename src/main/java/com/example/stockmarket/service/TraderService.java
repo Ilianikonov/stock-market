@@ -14,7 +14,7 @@ public class TraderService {
     }
     public Trader updateTrader(Trader trader){
        Trader trader1 = new Trader(trader.getId(),trader.getName(),trader.getPassword());
-       trader1.setFinancialPortfolios(trader.getFinancialPortfolios());
+       trader1.setTotalBalance(trader.getTotalBalance());
        return traderRepository.updateTrader(trader1);
     }
     public Trader deleteTraderById(long id){
