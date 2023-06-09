@@ -1,10 +1,19 @@
 package com.example.stockmarket.dao;
 
+import com.example.stockmarket.dao.mapper.BalanceMapper;
+import com.example.stockmarket.dao.mapper.TraderMapper;
 import com.example.stockmarket.entity.Trader;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class DatabaseTraderRepository implements TraderRepository{
-    JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    private  final JdbcTemplate jdbcTemplate;
+
+    public DatabaseTraderRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     @Override
     public void clear() {
         jdbcTemplate.update("truncate trader");
@@ -12,8 +21,8 @@ public class DatabaseTraderRepository implements TraderRepository{
 
     @Override
     public Trader createTrader(Trader trader) {
-       long traderId = jdbcTemplate.queryForObject("INSERT INTO trader(name,password)", new Object[]{trader.getName(), trader.getPassword()}, Long.class);
-        return jdbcTemplate.queryForObject("SELECT id, name, password FROM player WHERE player.id = ?", new Object[]{traderId}, new TraderMapper());
+       long traderId = jdbcTemplate.queryForObject("INSERT INTO trader(name,password) values (?,?) RETURNING id", new Object[]{trader.getName(), trader.getPassword()}, Long.class);
+        return jdbcTemplate.queryForObject("SELECT id, name, password FROM trader WHERE trader.id = ?", new Object[]{traderId}, new TraderMapper());
     }
 
     @Override

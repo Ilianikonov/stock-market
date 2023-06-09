@@ -1,6 +1,10 @@
 package com.example.stockmarket.dao;
 
-public class DatabaseBalanceMapper implements PortfolioRepository{
+import org.springframework.stereotype.Repository;
+
+
+@Repository
+public class DatabasePortfolioRepository implements PortfolioRepository{
     @Override
     public void buyCurrency(long traderId, double count, String currency) {
 

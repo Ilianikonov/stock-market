@@ -1,4 +1,4 @@
-package com.example.stockmarket.dao;
+package com.example.stockmarket.dao.mapper;
 
 import com.example.stockmarket.entity.Trader;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,7 +10,11 @@ public class TraderMapper implements RowMapper<Trader> {
 
     @Override
     public Trader mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        Trader trader = new Trader(resultSet.getLong("id"),resultSet.getString("name"),resultSet.getString("password").toCharArray());
+        Trader trader = new Trader(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getString("password").toCharArray()
+        );
         return trader;
     }
 }
