@@ -11,4 +11,5 @@ public class TraderController {
     public TraderController(DatabaseTraderRepository databaseTraderRepository) {
         this.databaseTraderRepository = databaseTraderRepository;
     }
+
 }
