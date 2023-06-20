@@ -5,14 +5,12 @@ import com.example.stockmarket.entity.Balance;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 
 @Repository
-public class DatabasePortfolioRepository implements PortfolioRepository{
+public class DatabaseBalanceRepository implements PortfolioRepository{
     private final JdbcTemplate jdbcTemplate;
 
-    public DatabasePortfolioRepository(JdbcTemplate jdbcTemplate) {
+    public DatabaseBalanceRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

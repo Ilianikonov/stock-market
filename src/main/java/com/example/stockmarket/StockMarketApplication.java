@@ -1,7 +1,5 @@
 package com.example.stockmarket;
 
-import com.example.stockmarket.dao.DatabasePortfolioRepository;
-import com.example.stockmarket.dao.DatabaseTraderRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
