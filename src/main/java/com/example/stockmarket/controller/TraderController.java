@@ -1,14 +1,15 @@
 package com.example.stockmarket.controller;
 
-import com.example.stockmarket.dao.DatabaseTraderRepository;
-import org.springframework.web.bind.annotation.PostMapping;
+import com.example.stockmarket.service.TraderService;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/stock-market/trader")
 public class TraderController {
-    DatabaseTraderRepository databaseTraderRepository;
+    private  final TraderService traderService;
 
-    public TraderController(DatabaseTraderRepository databaseTraderRepository) {
-        this.databaseTraderRepository = databaseTraderRepository;
+    public TraderController(TraderService traderService) {
+        this.traderService = traderService;
     }
 }
