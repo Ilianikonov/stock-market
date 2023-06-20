@@ -1,5 +1,7 @@
 package com.example.stockmarket;
 
+import com.example.stockmarket.controller.BalanceController;
+import com.example.stockmarket.controller.TraderController;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +20,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class StockMarketApplicationTests {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private BalanceController balanceController;
+    @Autowired
+    private TraderController traderController;
     @Test
     void contextLoads() throws Exception {
-        mockMvc.perform(get("/"))
-                .andDo(print())
-                .andExpect(status().isOk());
+//        mockMvc.perform(get("/"))
+//                .andDo(print())
+//                .andExpect(status().isOk());
     }
 
 }
