@@ -1,36 +1,36 @@
 package com.example.stockmarket.service;
 
-import com.example.stockmarket.dao.DatabaseBalanceRepository;
+import com.example.stockmarket.dao.DatabaseТransactionRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BalanceService {
-    private final DatabaseBalanceRepository databaseBalanceRepository;
+    private final DatabaseТransactionRepository databaseТransactionRepository;
 
-    public BalanceService(DatabaseBalanceRepository databaseBalanceRepository) {
-        this.databaseBalanceRepository = databaseBalanceRepository;
+    public BalanceService(DatabaseТransactionRepository databaseТransactionRepository) {
+        this.databaseТransactionRepository = databaseТransactionRepository;
     }
 
     public void buyCurrency(long traderId, double count, String currency) {
-        databaseBalanceRepository.buyCurrency(traderId, count, currency);
+        databaseТransactionRepository.buyCurrency(traderId, count, currency);
     }
 
     public void sellCurrency(long traderId, double count, String currency) {
-        databaseBalanceRepository.sellCurrency(traderId, count, currency);
+        databaseТransactionRepository.sellCurrency(traderId, count, currency);
     }
 
 
     public void upBalance(long traderId, double count, String currency) {
-        databaseBalanceRepository.upBalance(traderId, count, currency);
+        databaseТransactionRepository.addCurrency(traderId, count, currency);
     }
 
 
     public double getTotalBalance(long traderId, String currency) {
-        return databaseBalanceRepository.getTotalBalance(traderId, currency);
+        return databaseТransactionRepository.getTotalBalance(traderId, currency);
     }
 
 
-    public double getBalanceById(long traderId, String currency) {
-        return databaseBalanceRepository.getBalanceById(traderId, currency);
+    public double getBalanceByCurrency(long traderId, String currency) {
+        return databaseТransactionRepository.getBalanceByCurrency(traderId, currency);
     }
 }

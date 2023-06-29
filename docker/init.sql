@@ -8,7 +8,7 @@ create table trader
     password varchar(30) not null
 );
 
-create table balance
+create table transaction
 (
     id            serial primary key,
     currency_name varchar(10)      not null,
@@ -16,7 +16,7 @@ create table balance
     trader_id     int references trader (id)
 );
 
-INSERT INTO balance (amount, trader_id, currency_name)
-values (100, 1, "RUB");
-INSERT INTO tracer (name, password)
-values ("nikonov_ilia", "nikonov_ilia");
+INSERT INTO trader (name, password)
+values ('nikonov_ilia', 'nikonov_ilia');
+INSERT INTO transaction (amount, trader_id, currency_name)
+values (100, 1, 'RUB');

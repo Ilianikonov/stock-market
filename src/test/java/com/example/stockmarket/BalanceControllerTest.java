@@ -3,6 +3,7 @@ package com.example.stockmarket;
 import com.example.stockmarket.controller.BalanceController;
 import com.example.stockmarket.controller.response.GetBalanceResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,38 +27,45 @@ public class BalanceControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final String GET_CURRENCY_URL = "/balance/getCurrency";
+    private static final String GET_CURRENCY_URL = "/balance/getBalanceByCurrency";
     private static final String BUY_CURRENCY_URL = "/balance/buyCurrency";
+    private static final String SELL_CURRENCY_URL = "/balance/sellCurrency";
     @Test
-    public void balanceBuyCurrency() throws Exception{
-
-        mockMvc.perform(post("/balance/buyCurrency")
-                        .param("traderId", "1")
-                        .param("amount", "14.4")
-                        .param("currency", "RUB"))
+    public void buyCurrency() throws Exception{
+        long traderId = 1;
+        double amount = 14.4;
+        String currency = "RUB";
+        double amountBefore = getBalanceByCurrency(traderId,currency);
+        mockMvc.perform(post(BUY_CURRENCY_URL)
+                        .param("traderId", String.valueOf(traderId))
+                        .param("amount", String.valueOf(amount))
+                        .param("currency", currency))
                 .andExpect(status().isOk());
-        getBalanceByCurrency(1,"RUB");
-
+        double amountAfter = getBalanceByCurrency(traderId,currency);
+        Assertions.assertEquals(amountBefore + amount,amountAfter);
     }
-    public double getBalanceByCurrency(long traderId, String currency) throws Exception{
+    private double getBalanceByCurrency(long traderId, String currency) throws Exception{
         String response = mockMvc.perform(get(GET_CURRENCY_URL)
                 .param("traderId", String.valueOf(traderId))
                 .param("currency", currency))
-//                .andExpect(jsonPath("$.currency").value(currency))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currency").value(currency))
                 .andReturn().getResponse().getContentAsString();
         return objectMapper.readValue(response, GetBalanceResponse.class).getAmount();
     }
-//    @Test
-//    public void sellCurrency() throws Exception{
-//
-//        mockMvc.perform(post("/balance/sellCurrency")
-//                        .param("traderId", "1")
-//                        .param("amount", "14.4")
-//                        .param("currency", "RUB"))
-//                .andExpect(status().isOk());
-//        getBalanceByCurrency(1,"RUB");
-//
-//    }
+    @Test
+    public void sellCurrency() throws Exception{
+        long traderId = 1;
+        double amount = 14.4;
+        String currency = "RUB";
+        double amountBefore = getBalanceByCurrency(traderId,currency);
+        mockMvc.perform(post(SELL_CURRENCY_URL)
+                        .param("traderId", String.valueOf(traderId))
+                        .param("amount", String.valueOf(amount))
+                        .param("currency", currency))
+                .andExpect(status().isOk());
+        double amountAfter = getBalanceByCurrency(traderId,currency);
+        Assertions.assertEquals(amountBefore - amount,amountAfter);
+    }
 
 }

@@ -1,5 +1,7 @@
 package com.example.stockmarket.controller;
 
+import com.example.stockmarket.controller.response.GetBalanceResponse;
+import com.example.stockmarket.entity.Balance;
 import com.example.stockmarket.service.BalanceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ public class BalanceController {
                             @RequestParam String currency){
         balanceService.buyCurrency(traderId,amount,currency);
     }
+
     @PostMapping("/sellCurrency")
     public void sellCurrency(@RequestParam long traderId,
                             @RequestParam double amount,
@@ -38,9 +41,12 @@ public class BalanceController {
                           @RequestParam String currency){
         balanceService.getTotalBalance(traderId,currency);
     }
-    @GetMapping("/getBalanceById")
-    public void getBalanceById(@RequestParam long traderId,
-                                @RequestParam String currency){
-        balanceService.getBalanceById(traderId,currency);
+    @GetMapping("/getBalanceByCurrency")
+    public GetBalanceResponse getBalanceByCurrency(@RequestParam long traderId,
+                                                   @RequestParam String currency){
+        GetBalanceResponse getBalanceResponse = new GetBalanceResponse();
+        getBalanceResponse.setCurrency(currency);
+        getBalanceResponse.setAmount(balanceService.getBalanceByCurrency(traderId,currency));
+        return getBalanceResponse;
     }
 }
