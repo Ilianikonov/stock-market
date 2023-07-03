@@ -95,7 +95,7 @@ public void getTotalBalance() throws Exception{
     MvcResult amountAfter = mockMvc.perform(get(GET_TOTAL_BALANCE_URL)
                     .param("traderId", String.valueOf(traderId))
                     .param("currency", currency))
-            .andExpect(status().isOk())
+                    .andExpect(status().isOk())
                     .andReturn();
     Assertions.assertEquals(amountCurrency,amountAfter);
 }

@@ -20,32 +20,30 @@ public class DatabaseTraderRepository implements TraderRepository{
     }
 
     @Override
-    public Trader createTrader(CreateTrader trader) {
-       Long traderId = jdbcTemplate.queryForObject("INSERT INTO trader(name,password) values (?,?) RETURNING id", new Object[]{trader.getName(), String.valueOf(trader.getPassword())}, Long.class);
-        return jdbcTemplate.queryForObject("SELECT id, name, password FROM trader WHERE trader.id = ?", new Object[]{traderId}, new TraderMapper());
+    public Trader createTrader(Trader trader) {
+       Long traderId = jdbcTemplate.queryForObject("INSERT INTO trader(name,password) values (?,?) RETURNING id", Long.class, trader.getName(), String.valueOf(trader.getPassword()));
+        return jdbcTemplate.queryForObject("SELECT id, name, password FROM trader WHERE trader.id = ?", new TraderMapper(), traderId );
     }
 
     @Override
     public Trader updateTrader(Trader trader) {
-        if (getTraderById(trader.getId()) == null) {
-            createTrader(new CreateTrader(trader.getName(), trader.getPassword()));
-        }
-        jdbcTemplate.update("UPDATE trader SET name=?, password=? WHERE id = ?", new Object[]{trader.getName(), String.valueOf(trader.getPassword()), trader.getId()});
+        jdbcTemplate.update("UPDATE trader SET name=?, password=? WHERE id = ?", trader.getName(), String.valueOf(trader.getPassword()), trader.getId());
         return getTraderById(trader.getId());
     }
 
     @Override
     public Trader deleteTraderById(long id) {
         Trader trader = getTraderById(id);
-        jdbcTemplate.update("DELETE FROM trader WHERE id = ?  ", id);
+        jdbcTemplate.update("DELETE FROM  transaction WHERE trader_id = ?  ", id);
+        jdbcTemplate.update("DELETE FROM  trader WHERE id = ?  ", id);
         return trader;
     }
 
     @Override
     public Trader getTraderById(long id) {
-      Trader trader = jdbcTemplate.queryForObject("select id, name, password from trader where trader.id = ?", new Object[]{id}, new TraderMapper());
+      Trader trader = jdbcTemplate.queryForObject("select id, name, password from trader where trader.id = ?", new TraderMapper(), id);
       if (trader != null) {
-          trader.setTotalBalance(jdbcTemplate.query("select currency_name, amount from Transaction where trader_id = ?", new Object[]{id}, new BalanceMapper()));
+          trader.setTotalBalance(jdbcTemplate.query("select currency_name, amount from Transaction where trader_id = ?", new BalanceMapper(), id));
       }
       return trader;
     }

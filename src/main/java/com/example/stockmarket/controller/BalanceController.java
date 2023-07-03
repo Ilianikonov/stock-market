@@ -1,7 +1,6 @@
 package com.example.stockmarket.controller;
 
 import com.example.stockmarket.controller.response.GetBalanceResponse;
-import com.example.stockmarket.entity.Balance;
 import com.example.stockmarket.service.BalanceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ public class BalanceController {
 
     public BalanceController(BalanceService balanceService) {
         this.balanceService = balanceService;
-        System.out.println("бин поднят");
     }
 
     @PostMapping("/buyCurrency")

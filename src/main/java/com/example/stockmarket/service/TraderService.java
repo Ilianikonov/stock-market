@@ -1,7 +1,5 @@
 package com.example.stockmarket.service;
 
-import com.example.stockmarket.controller.request.CreateTraderRequest;
-import com.example.stockmarket.dao.CreateTrader;
 import com.example.stockmarket.dao.DatabaseTraderRepository;
 import com.example.stockmarket.entity.Trader;
 import org.springframework.stereotype.Service;
@@ -19,7 +17,7 @@ public class TraderService {
     }
 
 
-    public Trader createTrader(CreateTrader trader) {
+    public Trader createTrader(Trader trader) {
         return databaseTraderRepository.createTrader(trader);
     }
 
