@@ -30,16 +30,16 @@ public class BalanceController {
                             @RequestParam String currency){
         balanceService.sellCurrency(traderId,amount,currency);
     }
-    @PostMapping("/upBalance")
-    public void upBalance(@RequestParam long traderId,
+    @PostMapping("/addCurrency")
+    public void addCurrency(@RequestParam long traderId,
                              @RequestParam double amount,
                              @RequestParam String currency){
-        balanceService.upBalance(traderId,amount,currency);
+        balanceService.addCurrency(traderId,amount,currency);
     }
     @GetMapping("/getTotalBalance")
-    public void getTotalBalance(@RequestParam long traderId,
-                          @RequestParam String currency){
-        balanceService.getTotalBalance(traderId,currency);
+    public double getTotalBalance(@RequestParam long traderId,
+                                  @RequestParam String currency){
+       return balanceService.getTotalBalance(traderId,currency);
     }
     @GetMapping("/getBalanceByCurrency")
     public GetBalanceResponse getBalanceByCurrency(@RequestParam long traderId,

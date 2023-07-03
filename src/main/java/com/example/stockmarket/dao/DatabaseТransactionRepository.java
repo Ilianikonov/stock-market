@@ -38,8 +38,8 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
 
     @Override
     public void addCurrency(long traderId, double count, String currency) {
-        Balance balance = jdbcTemplate.queryForObject("select amount,currency_name from Transaction trader_id = ? and currency_name = ?", new Object[]{traderId, currency}, new BalanceMapper());
-        if (balance.getCurrencyName() != currency) {
+        Balance balance = jdbcTemplate.queryForObject("select amount,currency_name from Transaction where trader_id = ? and currency_name = ?", new Object[]{traderId, currency}, new BalanceMapper());
+        if (balance.getCurrencyName() == null) {
             jdbcTemplate.update("INSERT INTO Transaction(currency_name,amount,trader_id) values (?,?,?)", new Object[]{currency, count, traderId});
         }
         jdbcTemplate.update("UPDATE Transaction SET amount = ? WHERE trader_id = ? and currency_name = ?", new Object[]{count, traderId, currency});

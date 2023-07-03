@@ -20,14 +20,17 @@ public class DatabaseTraderRepository implements TraderRepository{
     }
 
     @Override
-    public Trader createTrader(Trader trader) {
-       long traderId = jdbcTemplate.queryForObject("INSERT INTO trader(name,password) values (?,?) RETURNING id", new Object[]{trader.getName(), trader.getPassword()}, Long.class);
+    public Trader createTrader(CreateTrader trader) {
+       Long traderId = jdbcTemplate.queryForObject("INSERT INTO trader(name,password) values (?,?) RETURNING id", new Object[]{trader.getName(), String.valueOf(trader.getPassword())}, Long.class);
         return jdbcTemplate.queryForObject("SELECT id, name, password FROM trader WHERE trader.id = ?", new Object[]{traderId}, new TraderMapper());
     }
 
     @Override
     public Trader updateTrader(Trader trader) {
-        jdbcTemplate.update("UPDATE trader SET name=?, password=? WHERE id = ?", new Object[]{trader.getName(),trader.getPassword(),trader.getId()});
+        if (getTraderById(trader.getId()) == null) {
+            createTrader(new CreateTrader(trader.getName(), trader.getPassword()));
+        }
+        jdbcTemplate.update("UPDATE trader SET name=?, password=? WHERE id = ?", new Object[]{trader.getName(), String.valueOf(trader.getPassword()), trader.getId()});
         return getTraderById(trader.getId());
     }
 
@@ -40,9 +43,9 @@ public class DatabaseTraderRepository implements TraderRepository{
 
     @Override
     public Trader getTraderById(long id) {
-      Trader trader = jdbcTemplate.queryForObject("select id, name, password from trader trader.id = ?",new TraderMapper(),id);
+      Trader trader = jdbcTemplate.queryForObject("select id, name, password from trader where trader.id = ?", new Object[]{id}, new TraderMapper());
       if (trader != null) {
-          trader.setTotalBalance(jdbcTemplate.query("select currency_name, amount from balance where trader_id = ?", new BalanceMapper(), id));
+          trader.setTotalBalance(jdbcTemplate.query("select currency_name, amount from Transaction where trader_id = ?", new Object[]{id}, new BalanceMapper()));
       }
       return trader;
     }

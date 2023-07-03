@@ -20,7 +20,7 @@ public class BalanceService {
     }
 
 
-    public void upBalance(long traderId, double count, String currency) {
+    public void addCurrency(long traderId, double count, String currency) {
         databaseТransactionRepository.addCurrency(traderId, count, currency);
     }
 

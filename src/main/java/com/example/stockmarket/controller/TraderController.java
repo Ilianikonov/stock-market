@@ -1,6 +1,7 @@
 package com.example.stockmarket.controller;
 
 import com.example.stockmarket.controller.request.CreateTraderRequest;
+import com.example.stockmarket.dao.CreateTrader;
 import com.example.stockmarket.entity.Trader;
 import com.example.stockmarket.service.TraderService;
 import org.springframework.http.HttpStatus;
@@ -17,18 +18,14 @@ public class TraderController {
     }
 
     @PostMapping("/createTrader")
-    public void createTrader(@RequestBody CreateTraderRequest createTraderRequest){
-        Trader trader = new Trader(
-                createTraderRequest.getId(),
+    public Trader createTrader(@RequestBody CreateTraderRequest createTraderRequest){
+        CreateTrader createTrader = new CreateTrader(
                 createTraderRequest.getName(),
                 createTraderRequest.getPassword());
-        traderService.createTrader(trader);
+        return traderService.createTrader(createTrader);
     }
     @PostMapping("/updateTrader")
     public Trader updateTrader (@RequestBody CreateTraderRequest createTraderRequest) {
-        if (traderService.getTraderById(createTraderRequest.getId()) == null) {
-            createTrader(createTraderRequest);
-        }
         Trader trader = new Trader(createTraderRequest.getId(),
                 createTraderRequest.getName(),
                 createTraderRequest.getPassword());
