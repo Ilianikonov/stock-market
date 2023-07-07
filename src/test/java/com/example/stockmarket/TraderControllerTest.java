@@ -61,7 +61,6 @@ public class TraderControllerTest {
                 .andExpect(status().isOk());
         mockMvc.perform(get(GET_TRADER_BY_ID_URL,trader.getId()))
                 .andExpect(status().isNotFound());
-
     }
     private Trader getTraderById (long id) throws Exception {
         String response = mockMvc.perform(get(GET_TRADER_BY_ID_URL,id))
