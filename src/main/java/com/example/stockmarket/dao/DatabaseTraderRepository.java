@@ -41,10 +41,6 @@ public class DatabaseTraderRepository implements TraderRepository{
 
     @Override
     public Trader getTraderById(long id) {
-      Trader trader = jdbcTemplate.queryForObject("select id, name, password from trader where trader.id = ?", new TraderMapper(), id);
-      if (trader != null) {
-          trader.setTotalBalance(jdbcTemplate.query("select currency_name, amount from Transaction where trader_id = ?", new BalanceMapper(), id));
-      }
-      return trader;
+      return jdbcTemplate.queryForObject("select id, name, password from trader where trader.id = ?", new TraderMapper(), id);
     }
 }

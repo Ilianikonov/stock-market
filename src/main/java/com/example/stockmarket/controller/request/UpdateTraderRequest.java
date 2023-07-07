@@ -14,5 +14,4 @@ import java.util.List;
 public class UpdateTraderRequest extends TraderRequest {
     @NotNull
     private long id;
-    private List<Balance> totalBalance;
 }
