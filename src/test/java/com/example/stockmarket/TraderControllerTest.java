@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+
 public class TraderControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -65,7 +66,6 @@ public class TraderControllerTest {
     }
     @Test
     public void deleteTraderByIdTest() throws Exception {
-           long id = 1;
         Trader trader = createTrader("IliaNikonov","Nikonov1997!");
         mockMvc.perform(delete(DELETE_TRADER_BY_ID_URL,trader.getId()))
                 .andExpect(status().isOk());
