@@ -30,7 +30,7 @@ public class TraderControllerTest {
     private ObjectMapper objectMapper;
     private static final String CREATE_TRADER_URL = "/trader/createTrader";
     private static final String UP_DATE_TRADER_URL = "/trader/updateTrader";
-    private static final String DELETE_TRADER_BY_ID_URL = "/trader/deleteTraderById";
+    private static final String DELETE_TRADER_BY_ID_URL = "/trader/deleteTraderBy/{Id}";
     private static final String GET_TRADER_BY_ID_URL = "/trader/getTraderById/{id}";
 
        @Test

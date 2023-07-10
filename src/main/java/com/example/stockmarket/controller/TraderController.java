@@ -7,6 +7,9 @@ import com.example.stockmarket.controller.response.TraderResponse;
 import com.example.stockmarket.entity.Trader;
 import com.example.stockmarket.service.TraderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -32,8 +35,11 @@ public class TraderController {
         return traderConverter.convertToTrader(trader);
     }
     @GetMapping("/getTraderById/{id}")
-    public TraderResponse getTraderById(@PathVariable Long id){
+    public ResponseEntity<TraderResponse> getTraderById(@PathVariable Long id) {
         Trader trader = traderService.getTraderById(id);
-        return traderConverter.convertToTrader(trader);
+        if (trader == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(traderConverter.convertToTrader(trader));
     }
 }

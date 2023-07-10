@@ -1,10 +1,19 @@
 package com.example.stockmarket.dao;
 
+import ch.qos.logback.classic.Logger;
 import com.example.stockmarket.dao.mapper.BalanceMapper;
 import com.example.stockmarket.dao.mapper.TraderMapper;
 import com.example.stockmarket.entity.Trader;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Null;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 
 @Repository
 public class DatabaseTraderRepository implements TraderRepository{
@@ -21,8 +30,19 @@ public class DatabaseTraderRepository implements TraderRepository{
 
     @Override
     public Trader createTrader(Trader trader) {
-       Long traderId = jdbcTemplate.queryForObject("INSERT INTO trader(name,password) values (?,?) RETURNING id", Long.class, trader.getName(), String.valueOf(trader.getPassword()));
-        return jdbcTemplate.queryForObject("SELECT id, name, password FROM trader WHERE trader.id = ?", new TraderMapper(), traderId );
+        String sql = "INSERT INTO trader(name,password) values (?,?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, trader.getName());
+            ps.setString(2, trader.getPassword().toString());
+            return ps;
+        }, keyHolder);
+        if (keyHolder.getKey() == null){
+            throw new RuntimeException ();
+        }else {
+            return getTraderById(keyHolder.getKey().longValue());
+        }
     }
 
     @Override
@@ -40,7 +60,12 @@ public class DatabaseTraderRepository implements TraderRepository{
     }
 
     @Override
+    @Nullable
     public Trader getTraderById(long id) {
-      return jdbcTemplate.queryForObject("select id, name, password from trader where trader.id = ?", new TraderMapper(), id);
+      try {
+          return jdbcTemplate.queryForObject("select id, name, password from trader where trader.id = ?", new TraderMapper(), id);
+      }catch (DataAccessException dataAccessException){
+          return null;
+      }
     }
 }
