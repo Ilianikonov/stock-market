@@ -83,7 +83,6 @@ public class TraderControllerTest {
         createTraderRequest.setName(name);
         createTraderRequest.setPassword(password.toCharArray());
         String jsonTrader = mockMvc.perform(post(CREATE_TRADER_URL)
-                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createTraderRequest)))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
