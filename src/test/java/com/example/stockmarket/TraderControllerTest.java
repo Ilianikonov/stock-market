@@ -30,7 +30,7 @@ public class TraderControllerTest {
     private ObjectMapper objectMapper;
     private static final String CREATE_TRADER_URL = "/trader/createTrader";
     private static final String UP_DATE_TRADER_URL = "/trader/updateTrader";
-    private static final String DELETE_TRADER_BY_ID_URL = "/trader/deleteTraderBy/{Id}";
+    private static final String DELETE_TRADER_BY_ID_URL = "/trader/deleteTraderById/{Id}";
     private static final String GET_TRADER_BY_ID_URL = "/trader/getTraderById/{id}";
 
        @Test
@@ -83,6 +83,7 @@ public class TraderControllerTest {
         createTraderRequest.setName(name);
         createTraderRequest.setPassword(password.toCharArray());
         String jsonTrader = mockMvc.perform(post(CREATE_TRADER_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createTraderRequest)))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
