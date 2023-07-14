@@ -58,7 +58,11 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
 
     @Override
     public double getBalanceByCurrency(long traderId, String currency) {
-        return jdbcTemplate.queryForObject("select sum(amount) from Transaction WHERE trader_id = ? and currency_name = ? ", Double.class, traderId, currency);
+        Double amount = jdbcTemplate.queryForObject("select sum(amount) from Transaction WHERE trader_id = ? and currency_name = ? ", Double.class, traderId, currency);
+        if (amount == null){
+            new RuntimeException("не найдены trader или transaction!");
+        }
+        return amount;
     }
 //    public double getCostCurrency(String currency, String currency2){
 //       return  "https://currate.ru/api/?get=rates&pairs="+ currency + currency2+ "&key=8290c72cf52d76f9350c7006a6fc9da4";
