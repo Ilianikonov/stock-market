@@ -15,8 +15,3 @@ create table transaction
     amount        double precision not null,
     trader_id     int references trader (id)
 );
-
-INSERT INTO trader (name, password)
-values ('nikonov_ilia', 'nikonov_ilia');
-INSERT INTO transaction (amount, trader_id, currency_name)
-values (100, 1, 'RUB');
