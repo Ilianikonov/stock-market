@@ -48,8 +48,8 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
 
     @Override
     public double getTotalBalance(long traderId, String currency) {
-//        List <Balance> balances = jdbcTemplate.query("select amount,currency_name from Transaction trader_id = ? ", new Object[]{traderId}, new BalanceMapper());
-//        double totalBalance = 0.0;
+//        List <Balance> balances = jdbcTemplate.query("select amount,currency_name from Transaction trader_id = ? ", traderId, new BalanceMapper());
+//        double totalBalance;
 //        for (Balance balance:balances) {
 //        totalBalance += (balance.getAmount() * getCostCurrency(currency,balance.getCurrencyName()));
 //        }
@@ -60,6 +60,7 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
     public double getBalanceByCurrency(long traderId, String currency) {
         Double amount = jdbcTemplate.queryForObject("select sum(amount) from Transaction WHERE trader_id = ? and currency_name = ? ", Double.class, traderId, currency);
         if (amount == null){
+            amount = 0.0;
             new RuntimeException("не найдены trader или transaction!");
         }
         return amount;
