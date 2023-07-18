@@ -30,7 +30,7 @@ public class BalanceService {
     }
 
 
-    public double getBalanceByCurrency(long traderId, String currency) {
+    public Double getBalanceByCurrency(long traderId, String currency) {
         return databaseТransactionRepository.getBalanceByCurrency(traderId, currency);
     }
 }
