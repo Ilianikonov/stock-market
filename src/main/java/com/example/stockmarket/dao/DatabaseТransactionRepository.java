@@ -15,7 +15,7 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
     }
 
     @Override
-    public void buyCurrency(long traderId, double count, String currency) {
+    public void buyCurrency(long traderId, double count, String currency) { // todo : доработать
         Integer countOfLines = jdbcTemplate.queryForObject("select count(*) from Transaction WHERE trader_id = ? and currency_name = ?", Integer.class, traderId, currency);
         String sql;
         if (countOfLines == null || countOfLines == 0) {
@@ -27,7 +27,7 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
     }
 
     @Override
-    public void sellCurrency(long traderId, double count, String currency) {
+    public void sellCurrency(long traderId, double count, String currency) { // todo : доработать
         Integer countOfLines = jdbcTemplate.queryForObject("select count(*) from Transaction WHERE trader_id = ? and currency_name = ?", Integer.class, traderId, currency);
         if (countOfLines != null && countOfLines != 0) {
             jdbcTemplate.update("UPDATE Transaction SET amount = amount - ? WHERE trader_id = ? and currency_name = ?", count, traderId, currency);
@@ -60,8 +60,7 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
     public double getBalanceByCurrency(long traderId, String currency) {
         Double amount = jdbcTemplate.queryForObject("select sum(amount) from Transaction WHERE trader_id = ? and currency_name = ? ", Double.class, traderId, currency);
         if (amount == null){
-            amount = 0.0;
-            new RuntimeException("не найдены trader или transaction!");
+           throw new RuntimeException("не найдены trader или currency!");
         }
         return amount;
     }
