@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
@@ -39,8 +40,8 @@ public class BalanceControllerTest {
     TraderService traderService;
     private static final String GET_CURRENCY_URL = "/balance/getBalanceByCurrency";
     private static final String BUY_CURRENCY_URL = "/balance/buyCurrency";
-    private static final String SELL_CURRENCY_URL = "/balance/sellCurrency";
-    private static final String ADD_BALANCE_URL = "/balance/addCurrency";
+    private static final String WITHDRAW_CURRENCY_URL = "/balance/withdrawCurrency";
+    private static final String EXCHANGE_CURRENCY_URL = "/balance/currencyExchange";
     private static final String GET_TOTAL_BALANCE_URL = "/balance/getTotalBalance";
     private static final String GET_BALANCE_BY_CURRENCY_URL = "/balance/getBalanceByCurrency";
 
@@ -50,7 +51,12 @@ public class BalanceControllerTest {
     public void buyCurrency() throws Exception{
         double amount = 14.4;
         String currency = "RUB";
-        double amountBefore = getBalanceByCurrency(traderId,currency); // todo : нет валюты падаем с ошибкой
+        mockMvc.perform(post(BUY_CURRENCY_URL)
+                        .param("traderId", String.valueOf(traderId))
+                        .param("amount", String.valueOf(amount))
+                        .param("currency", currency))
+                .andExpect(status().isOk());
+        double amountBefore = getBalanceByCurrency(traderId,currency);
         mockMvc.perform(post(BUY_CURRENCY_URL)
                         .param("traderId", String.valueOf(traderId))
                         .param("amount", String.valueOf(amount))
@@ -59,7 +65,7 @@ public class BalanceControllerTest {
         double amountAfter = getBalanceByCurrency(traderId,currency);
         Assertions.assertEquals(amountBefore + amount,amountAfter);
     }
-    private double getBalanceByCurrency(long traderId, String currency) throws Exception{
+    public double getBalanceByCurrency(long traderId, String currency) throws Exception{
         String response = mockMvc.perform(get(GET_CURRENCY_URL)
                 .param("traderId", String.valueOf(traderId))
                 .param("currency", currency))
@@ -69,11 +75,16 @@ public class BalanceControllerTest {
         return objectMapper.readValue(response, GetBalanceResponse.class).getAmount();
     }
     @Test
-    public void sellCurrency() throws Exception{
+    public void withdrawCurrency() throws Exception{
         double amount = 14.4;
         String currency = "RUB";
+        mockMvc.perform(post(BUY_CURRENCY_URL)
+                        .param("traderId", String.valueOf(traderId))
+                        .param("amount", String.valueOf(amount))
+                        .param("currency", currency))
+                .andExpect(status().isOk());
         double amountBefore = getBalanceByCurrency(traderId,currency);
-        mockMvc.perform(post(SELL_CURRENCY_URL)
+        mockMvc.perform(post(WITHDRAW_CURRENCY_URL)
                         .param("traderId", String.valueOf(traderId))
                         .param("amount", String.valueOf(amount))
                         .param("currency", currency))
@@ -82,16 +93,49 @@ public class BalanceControllerTest {
         Assertions.assertEquals(amountBefore - amount,amountAfter);
     }
     @Test
-    public void addCurrency() throws Exception{
-        double amount = 112.1;
-        String currency = "RUB";
-        mockMvc.perform(post(ADD_BALANCE_URL)
+    public void withdrawCurrency2() throws Exception{
+        double amount = 14.4;
+        String currency = "FEG";
+        mockMvc.perform(post(WITHDRAW_CURRENCY_URL)
                         .param("traderId", String.valueOf(traderId))
                         .param("amount", String.valueOf(amount))
                         .param("currency", currency))
+                .andExpect(status().isNotFound());
+    }
+    @Test
+    public void currencyExchangeTest() throws Exception{
+        String addCurrency = "USD";
+        String reduceCurrency = "RUB";
+        double count = 124.12;
+        double amountReduceCurrency = getBalanceByCurrency(traderId, reduceCurrency);
+        mockMvc.perform(post(EXCHANGE_CURRENCY_URL)
+                        .param("traderId", String.valueOf(traderId))
+                        .param("count", String.valueOf(count))
+                        .param("addCurrency", addCurrency)
+                        .param("reduceCurrency", reduceCurrency))
                 .andExpect(status().isOk());
-        double amountAfter = getBalanceByCurrency(traderId,currency);
-        Assertions.assertEquals(amount,amountAfter);
+        double amountReduceCurrencyAfter = getBalanceByCurrency(traderId,reduceCurrency);
+        Assertions.assertTrue(amountReduceCurrency > amountReduceCurrencyAfter);
+    }
+    @Test
+    public void currencyExchangeTest2() throws Exception{
+        String addCurrency = "USD";
+        String reduceCurrency = "RUB";
+        double count = 124.12;
+        mockMvc.perform(post(BUY_CURRENCY_URL)
+                        .param("traderId", String.valueOf(traderId))
+                        .param("amount", String.valueOf(count))
+                        .param("currency", addCurrency))
+                .andExpect(status().isOk());
+        double amountAddCurrency = getBalanceByCurrency(traderId,addCurrency);
+        mockMvc.perform(post(EXCHANGE_CURRENCY_URL)
+                        .param("traderId", String.valueOf(traderId))
+                        .param("count", String.valueOf(count))
+                        .param("addCurrency", addCurrency)
+                        .param("reduceCurrency", reduceCurrency))
+                .andExpect(status().isOk());
+        double amountAddCurrencyAfter = getBalanceByCurrency(traderId,addCurrency);
+        Assertions.assertTrue(amountAddCurrency < amountAddCurrencyAfter);
     }
 @Test
 public void getTotalBalance() throws Exception{ // todo: дописать тест
@@ -105,9 +149,23 @@ public void getTotalBalance() throws Exception{ // todo: дописать тес
 }
     @Test
     public void getBalanceByCurrency() throws Exception{
+        double amount = 10.4;
         String currency = "RUB";
+        mockMvc.perform(post(BUY_CURRENCY_URL)
+                        .param("traderId", String.valueOf(traderId))
+                        .param("amount", String.valueOf(amount))
+                        .param("currency", currency))
+                .andExpect(status().isOk());
         double amountCurrency = getBalanceByCurrency(traderId,currency);
         Assertions.assertTrue(amountCurrency >= 0.0);
+    }
+    @Test
+    public void getBalanceByCurrency2() throws Exception{
+        String currency = "FWA";
+        mockMvc.perform(get(GET_CURRENCY_URL)
+                        .param("traderId", String.valueOf(traderId))
+                        .param("currency", currency))
+                .andExpect(status().isNotFound());
     }
     @BeforeAll
     public void createTrader () {

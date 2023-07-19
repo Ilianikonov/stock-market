@@ -27,17 +27,18 @@ public class BalanceController {
         balanceService.buyCurrency(traderId,amount,currency);
     }
 
-    @PostMapping("/sellCurrency")
-    public void sellCurrency(@RequestParam long traderId,
+    @PostMapping("/withdrawCurrency")
+    public void withdrawCurrency(@RequestParam long traderId,
                             @RequestParam double amount,
                             @RequestParam String currency){
-        balanceService.sellCurrency(traderId, amount, currency);
+        balanceService.withdrawCurrency(traderId, amount, currency);
     }
-    @PostMapping("/addCurrency")
-    public void addCurrency(@RequestParam long traderId,
-                             @RequestParam double amount,
-                             @RequestParam String currency){
-        balanceService.addCurrency(traderId, amount, currency);
+    @PostMapping("/currencyExchange")
+    public void currencyExchange(@RequestParam long traderId,
+                                 @RequestParam double count,
+                                 @RequestParam String addCurrency,
+                                 @RequestParam String reduceCurrency) {
+        balanceService.currencyExchange(traderId, count, addCurrency, reduceCurrency);
     }
     @GetMapping("/getTotalBalance")
     public double getTotalBalance(@RequestParam long traderId,
@@ -46,10 +47,10 @@ public class BalanceController {
     }
     @GetMapping("/getBalanceByCurrency")
     public ResponseEntity<GetBalanceResponse> getBalanceByCurrency(@RequestParam long traderId,
-                                                         @RequestParam String currency){
+                                                                   @RequestParam String currency){
+        double amount = balanceService.getBalanceByCurrency(traderId, currency);
         GetBalanceResponse getBalanceResponse = new GetBalanceResponse();
         getBalanceResponse.setCurrency(currency);
-        double amount = balanceService.getBalanceByCurrency(traderId, currency);
         getBalanceResponse.setAmount(amount);
         return new ResponseEntity<>(getBalanceResponse, HttpStatus.OK);
     }
