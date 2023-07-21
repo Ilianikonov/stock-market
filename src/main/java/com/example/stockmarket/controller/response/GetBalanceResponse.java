@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class GetBalanceResponse {
-    private Double amount;
+    private double amount;
     private String currency;
 }

@@ -15,22 +15,19 @@ public class BalanceService {
         databaseТransactionRepository.buyCurrency(traderId, count, currency);
     }
 
-    public void sellCurrency(long traderId, double count, String currency) {
-        databaseТransactionRepository.sellCurrency(traderId, count, currency);
+    public void withdrawCurrency(long traderId, double count, String currency) {
+        databaseТransactionRepository.withdrawCurrency(traderId, count, currency);
     }
-
-
-    public void addCurrency(long traderId, double count, String currency) {
-        databaseТransactionRepository.addCurrency(traderId, count, currency);
-    }
-
 
     public double getTotalBalance(long traderId, String currency) {
-        return databaseТransactionRepository.getTotalBalance(traderId, currency);
+        databaseТransactionRepository.getTotalBalance(traderId, currency);
+        return 0.0;
     }
 
-
-    public double getBalanceByCurrency(long traderId, String currency) {
+    public Double getBalanceByCurrency(long traderId, String currency) {
         return databaseТransactionRepository.getBalanceByCurrency(traderId, currency);
+    }
+    public void currencyExchange(long traderId, double count, String addCurrency, String reduceCurrency) {
+        databaseТransactionRepository.currencyExchange(traderId, count, addCurrency, reduceCurrency);
     }
 }
