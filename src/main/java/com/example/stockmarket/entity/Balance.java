@@ -5,4 +5,5 @@ import lombok.Data;
 public class Balance {
    private String currencyName;
    private double amount;
+
 }
