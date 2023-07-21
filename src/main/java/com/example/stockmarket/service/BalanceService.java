@@ -20,7 +20,8 @@ public class BalanceService {
     }
 
     public double getTotalBalance(long traderId, String currency) {
-        return databaseТransactionRepository.getTotalBalance(traderId, currency);
+        databaseТransactionRepository.getTotalBalance(traderId, currency);
+        return 0.0;
     }
 
     public Double getBalanceByCurrency(long traderId, String currency) {

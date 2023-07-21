@@ -140,7 +140,12 @@ public class BalanceControllerTest {
 @Test
 public void getTotalBalance() throws Exception{ // todo: дописать тест
     String currency = "RUB";
-    double amountCurrency = getBalanceByCurrency(traderId,currency);
+    double count = 124.12;
+    mockMvc.perform(post(BUY_CURRENCY_URL)
+                    .param("traderId", String.valueOf(traderId))
+                    .param("amount", String.valueOf(count))
+                    .param("currency", currency))
+            .andExpect(status().isOk());
     mockMvc.perform(get(GET_TOTAL_BALANCE_URL)
                     .param("traderId", String.valueOf(traderId))
                     .param("currency", currency))

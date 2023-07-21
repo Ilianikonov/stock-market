@@ -5,6 +5,8 @@ import com.example.stockmarket.entity.Balance;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public class DatabaseТransactionRepository implements PortfolioRepository{
@@ -37,13 +39,13 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
     }
 
     @Override
-    public double getTotalBalance(long traderId, String currency) {
-//        List <Balance> balances = jdbcTemplate.query("select amount,currency_name from Transaction trader_id = ? ", traderId, new BalanceMapper());
+    public List <Balance> getTotalBalance(long traderId, String currency) {
+ //       List <Balance> balances = jdbcTemplate.query("select amount,currency_name from Transaction where trader_id = ? ", traderId, new BalanceMapper());
 //        double totalBalance;
 //        for (Balance balance:balances) {
 //        totalBalance += (balance.getAmount() * getCostCurrency(currency,balance.getCurrencyName()));
 //        }
-        return 615.5;
+        return null;
     }
 
     @Override
