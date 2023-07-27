@@ -1,5 +1,6 @@
+drop table if exists transaction;
 drop table if exists trader;
-drop table if exists balance;
+drop table if exists transaction_type;
 
 create table trader
 (
@@ -17,9 +18,10 @@ create table transaction_type
 create table transaction
 (
     id                 serial primary key,
-    currency_name_from varchar(10)      not null,
-    currency_name_to   varchar(10),
-    amount             double precision not null,
+    currency_name_from varchar(10),
+    currency_name_to   varchar(10) not null,
+    amount_from           double precision,
+    amount_to             double precision not null,
     trader_id          int references trader (id),
     type_id            int references transaction_type (id),
     commission         double precision not null
@@ -33,7 +35,7 @@ INSERT INTO transaction_type (name)
 values ('EXCHANGE');
 INSERT INTO trader (name, password)
 values ('nikonov_ilia', 'nikonov_ilia');
-INSERT INTO transaction (amount, trader_id, currency_name_from, type_id, commission)
+INSERT INTO transaction (amount_to, trader_id, currency_name_to, type_id, commission)
 values (
         660,
         (select id from trader where name = 'nikonov_ilia'),
@@ -41,7 +43,7 @@ values (
         (select id from transaction_type where name = 'DEPOSITING'),
         10.0
         );
-INSERT INTO transaction (amount, trader_id, currency_name_from, type_id, commission)
+INSERT INTO transaction (amount_to, trader_id, currency_name_to, type_id, commission)
 values (
            50,
            (select id from trader where name = 'nikonov_ilia'),
@@ -49,7 +51,7 @@ values (
            (select id from transaction_type where name = 'DEPOSITING'),
            10.0
        );
-INSERT INTO transaction (amount, trader_id, currency_name_from, currency_name_to, type_id, commission)
+INSERT INTO transaction (amount_to, trader_id, currency_name_from, currency_name_to, type_id, commission)
 values (
            13,
            (select id from trader where name = 'nikonov_ilia'),
@@ -58,7 +60,7 @@ values (
            (select id from transaction_type where name = 'EXCHANGE'),
            10.0
        );
-INSERT INTO transaction (amount, trader_id, currency_name_from, type_id, commission)
+INSERT INTO transaction (amount_to, trader_id, currency_name_to, type_id, commission)
 values (
            160,
            (select id from trader where name = 'nikonov_ilia'),
@@ -66,7 +68,7 @@ values (
            (select id from transaction_type where name = 'DEPOSITING'),
            10.0
        );
-INSERT INTO transaction (amount, trader_id, currency_name_from, type_id, commission)
+INSERT INTO transaction (amount_to, trader_id, currency_name_to, type_id, commission)
 values (
            170,
            (select id from trader where name = 'nikonov_ilia'),
@@ -74,7 +76,7 @@ values (
            (select id from transaction_type where name = 'WITHDRAWAL'),
            13.0
        );
-INSERT INTO transaction (amount, trader_id, currency_name_from, type_id, commission)
+INSERT INTO transaction (amount_to, trader_id, currency_name_to, type_id, commission)
 values (
            110,
            (select id from trader where name = 'nikonov_ilia'),
@@ -82,7 +84,7 @@ values (
            (select id from transaction_type where name = 'DEPOSITING'),
            11.0
        );
-INSERT INTO transaction (amount, trader_id, currency_name_from, type_id, commission)
+INSERT INTO transaction (amount_to, trader_id, currency_name_to, type_id, commission)
 values (
            600,
            (select id from trader where name = 'nikonov_ilia'),
@@ -90,7 +92,7 @@ values (
            (select id from transaction_type where name = 'WITHDRAWAL'),
            15.0
        );
-INSERT INTO transaction (amount, trader_id, currency_name_from, currency_name_to, type_id, commission)
+INSERT INTO transaction (amount_to, trader_id, currency_name_from, currency_name_to, type_id, commission)
 values (
            170,
            (select id from trader where name = 'nikonov_ilia'),
@@ -99,7 +101,7 @@ values (
            (select id from transaction_type where name = 'EXCHANGE'),
            10.0
        );
-INSERT INTO transaction (amount, trader_id, currency_name_to, currency_name_from, type_id, commission)
+INSERT INTO transaction (amount_to, trader_id, currency_name_from, currency_name_to, type_id, commission)
 values (
            110,
            (select id from trader where name = 'nikonov_ilia'),

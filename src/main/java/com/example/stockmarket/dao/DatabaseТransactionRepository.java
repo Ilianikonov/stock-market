@@ -2,6 +2,7 @@ package com.example.stockmarket.dao;
 
 import com.example.stockmarket.dao.mapper.BalanceMapper;
 import com.example.stockmarket.entity.Balance;
+import com.example.stockmarket.exception.ObjectNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +19,7 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
 
     @Override
     public void buyCurrency(long traderId, double count, String currency) {
-        Integer countOfLines = jdbcTemplate.queryForObject("select count(*) from Transaction WHERE trader_id = ? and currency_name = ?", Integer.class, traderId, currency);
+        Integer countOfLines = jdbcTemplate.queryForObject("select count(*) from Transaction WHERE trader_id = ? and currency_name_to = ?", Integer.class, traderId, currency);
         String sql;
         if (countOfLines != null && countOfLines != 0) {
             sql = "UPDATE Transaction SET amount = amount + ? WHERE trader_id = ? and currency_name = ?";
@@ -34,7 +35,7 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
         if (countOfLines != null && countOfLines != 0) {
             jdbcTemplate.update("UPDATE Transaction SET amount = amount - ? WHERE trader_id = ? and currency_name = ?", count, traderId, currency);
         } else {
-            throw new RuntimeException("нет валюты для продажи");
+            throw new ObjectNotFoundException("нет валюты для продажи");
         }
     }
 
@@ -48,11 +49,25 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
         return null;
     }
 
+    /**
+     * получить сумму всех поступлений по валюте с вычетом комисси
+     * @param traderId
+     * @param currencyTo
+     * @return
+     */
     @Override
-    public double getBalanceByCurrency(long traderId, String currency) {
-        Double amount = jdbcTemplate.queryForObject("select sum(amount) from Transaction WHERE trader_id = ? and currency_name = ? ", Double.class, traderId, currency);
+    public double getCurrencyArrival(long traderId, String currencyTo) {
+        Double amount = jdbcTemplate.queryForObject("select sum(amount_to - transaction.commission) from Transaction WHERE trader_id = ? and currency_name_to = ? ", Double.class, traderId, currencyTo);
         if (amount == null){
-           throw new RuntimeException("не найдены trader или currency!");
+           throw new ObjectNotFoundException("не найдены trader или currency!");
+        }
+        return amount;
+    }
+    @Override
+    public double getCurrencyPayment(long traderId, String currencyFrom) {
+        Double amount = jdbcTemplate.queryForObject("select sum(amount) from Transaction WHERE trader_id = ? and currency_name_from = ? ", Double.class, traderId, currencyFrom);
+        if (amount == null){
+            throw new ObjectNotFoundException("не найдены trader или currency!");
         }
         return amount;
     }
@@ -63,7 +78,7 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
         String addSql;
         Double amountReduceCurrency = jdbcTemplate.queryForObject("select count(*) from Transaction WHERE trader_id = ? and currency_name = ?", Double.class, traderId, reduceCurrency);
         if (amountReduceCurrency == null || amountReduceCurrency < count){
-            throw new RuntimeException("нет Currency для обмена");
+            throw new ObjectNotFoundException("нет Currency для обмена");
         }
         double countAddCurrency = count * getCostCurrency(addCurrency, reduceCurrency);
         jdbcTemplate.update("UPDATE Transaction SET amount = amount - ? WHERE trader_id = ? and currency_name = ?", count, traderId, reduceCurrency);

@@ -2,6 +2,7 @@ package com.example.stockmarket.controller;
 
 import com.example.stockmarket.controller.response.ErrorResponse;
 import com.example.stockmarket.controller.response.GetBalanceResponse;
+import com.example.stockmarket.exception.ObjectNotFoundException;
 import com.example.stockmarket.service.BalanceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
@@ -54,10 +55,10 @@ public class BalanceController {
         getBalanceResponse.setAmount(amount);
         return new ResponseEntity<>(getBalanceResponse, HttpStatus.OK);
     }
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleException(RuntimeException runtimeException){
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleException(ObjectNotFoundException objectNotFoundException){
         ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setMessage(runtimeException.getMessage());
+        errorResponse.setMessage(objectNotFoundException.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }
