@@ -5,9 +5,7 @@ import com.example.stockmarket.controller.response.GetBalanceResponse;
 import com.example.stockmarket.exception.ObjectNotFoundException;
 import com.example.stockmarket.service.BalanceService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,11 +19,11 @@ public class BalanceController {
         this.balanceService = balanceService;
     }
 
-    @PostMapping("/buyCurrency")
-    public void buyCurrency(@RequestParam long traderId,
+    @PostMapping("/makeDepositing")
+    public void makeDepositing(@RequestParam long traderId,
                             @RequestParam double amount,
                             @RequestParam String currency){
-        balanceService.buyCurrency(traderId,amount,currency);
+        balanceService.makeDepositing(traderId,amount,currency);
     }
 
     @PostMapping("/withdrawCurrency")
@@ -42,14 +40,18 @@ public class BalanceController {
         balanceService.currencyExchange(traderId, count, addCurrency, reduceCurrency);
     }
     @GetMapping("/getTotalBalance")
-    public double getTotalBalance(@RequestParam long traderId,
+    public ResponseEntity<GetBalanceResponse> getTotalBalance(@RequestParam long traderId,
                                   @RequestParam String currency){
-       return balanceService.getTotalBalance(traderId, currency);
+        double amount = balanceService.getTotalBalance(traderId, currency).getAmount();
+        GetBalanceResponse getBalanceResponse = new GetBalanceResponse();
+        getBalanceResponse.setCurrency(currency);
+        getBalanceResponse.setAmount(amount);
+        return new ResponseEntity<>(getBalanceResponse, HttpStatus.OK);
     }
     @GetMapping("/getBalanceByCurrency")
     public ResponseEntity<GetBalanceResponse> getBalanceByCurrency(@RequestParam long traderId,
                                                                    @RequestParam String currency){
-        double amount = balanceService.getBalanceByCurrency(traderId, currency);
+        double amount = balanceService.getBalanceByCurrency(traderId, currency).getAmount();
         GetBalanceResponse getBalanceResponse = new GetBalanceResponse();
         getBalanceResponse.setCurrency(currency);
         getBalanceResponse.setAmount(amount);
