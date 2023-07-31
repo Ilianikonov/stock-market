@@ -1,6 +1,7 @@
 package com.example.stockmarket.service;
 
 import com.example.stockmarket.dao.DatabaseТransactionRepository;
+import com.example.stockmarket.entity.Balance;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +25,7 @@ public class BalanceService {
         return 0.0;
     }
 
-    public Double getBalanceByCurrency(long traderId, String currency) {
+    public Balance getBalanceByCurrency(long traderId, String currency) {
         return databaseТransactionRepository.getBalanceByCurrency(traderId, currency);
     }
     public void currencyExchange(long traderId, double count, String addCurrency, String reduceCurrency) {
