@@ -5,7 +5,6 @@ import com.example.stockmarket.entity.Trader;
 import com.example.stockmarket.service.TraderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,8 +37,6 @@ public class BalanceControllerTest {
     private static final String WITHDRAW_CURRENCY_URL = "/balance/withdrawCurrency";
     private static final String EXCHANGE_CURRENCY_URL = "/balance/currencyExchange";
     private static final String GET_TOTAL_BALANCE_URL = "/balance/getTotalBalance";
-
-    long traderId;
 
     @Test
     public void makeDepositing() throws Exception{
@@ -182,11 +179,11 @@ public void getTotalBalance() throws Exception{ // todo: дописать тес
                         .param("currency", currency))
                 .andExpect(status().isNotFound());
     }
-    @BeforeAll
-    public void createTrader () {
+    public Trader createTrader (String name) {
         Trader trader = new Trader();
-        trader.setName("ojioiy");
+        trader.setName(name);
         trader.setPassword("passworin".toCharArray());
-        traderId = traderService.createTrader(trader).getId();
+        trader.setId(traderService.createTrader(trader).getId());
+        return trader;
     }
 }
