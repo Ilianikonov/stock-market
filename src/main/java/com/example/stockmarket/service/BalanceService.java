@@ -5,7 +5,6 @@ import com.example.stockmarket.entity.Balance;
 import com.example.stockmarket.exception.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,12 +17,14 @@ public class BalanceService {
     }
 
     public void makeDepositing(long traderId, double count, String currency) {
-        databaseТransactionRepository.makeDepositing(traderId, count, currency);
+        double commission = 0;
+        databaseТransactionRepository.makeDepositing(traderId, count, currency, commission);
     }
 
     public void withdrawCurrency(long traderId, double count, String currency) {
+        double commission = 0;
         if ((databaseТransactionRepository.getAmountOfAdditions(traderId,currency) - databaseТransactionRepository.getAmountOfSubtractions(traderId,currency)) >= count){
-            databaseТransactionRepository.withdrawCurrency(traderId, count, currency);
+            databaseТransactionRepository.withdrawCurrency(traderId, count, currency, commission);
         }else {
             throw new ObjectNotFoundException("недостаточно средств для вывода");
         }
@@ -33,16 +34,14 @@ public class BalanceService {
         Balance balanceTotal = new Balance();
         double amount = 0.0;
         balanceTotal.setCurrencyName(currency);
-        List<Balance> balanceList = new ArrayList<>();
-        List<String> currencyNameList = databaseТransactionRepository.getTotalBalance(traderId, currency);
+        List<String> currencyNameList = databaseТransactionRepository.getTotalBalance(traderId);
         for (String name: currencyNameList){
-            balanceList.add(getBalanceByCurrency(traderId,name));
-        }
-        for (Balance balance: balanceList){
-            if (currency != balance.getCurrencyName()) {
-                amount += balance.getAmount() * databaseТransactionRepository.getCostCurrency(balance.getCurrencyName(), currency);
-            } else {
-                amount += balance.getAmount();
+            if (name != null) {
+                if (!Objects.equals(currency, name)) {
+                    amount += getBalanceByCurrency(traderId, name).getAmount() * databaseТransactionRepository.getCostCurrency(name, currency);
+                } else {
+                    amount += getBalanceByCurrency(traderId, currency).getAmount();
+                }
             }
         }
         balanceTotal.setAmount(amount);

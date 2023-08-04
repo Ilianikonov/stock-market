@@ -19,9 +19,9 @@ create table transaction
 (
     id                 serial primary key,
     currency_name_from varchar(10),
-    currency_name_to   varchar(10) not null,
+    currency_name_to   varchar(10),
     amount_from           double precision,
-    amount_to             double precision not null,
+    amount_to             double precision,
     trader_id          int references trader (id),
     type_id            int references transaction_type (id),
     commission         double precision not null

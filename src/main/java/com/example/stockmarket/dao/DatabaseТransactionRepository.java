@@ -17,8 +17,8 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
     }
 
     @Override
-    public void makeDepositing(long traderId, double count, String currency) {
-        jdbcTemplate.update("INSERT INTO Transaction(commission,amount_to,trader_id,currency_name_to,type_id) values (0,?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'DEPOSITING'))",count, traderId, currency);
+    public void makeDepositing(long traderId, double count, String currency, double commission) {
+        jdbcTemplate.update("INSERT INTO Transaction(commission,amount_to,trader_id,currency_name_to,type_id) values (?,?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'DEPOSITING'))", commission,count, traderId, currency);
     }
     public double getAmountOfAdditions(long traderId, String currency) {
         Double sumAmountTo = jdbcTemplate.queryForObject("select sum(amount_to) from Transaction WHERE trader_id = ? and currency_name_to = ?", Double.class, traderId, currency);
@@ -37,12 +37,12 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
     }
 
     @Override
-    public void withdrawCurrency(long traderId, double count, String currency) {
-        jdbcTemplate.update("INSERT INTO Transaction(amount_from,trader_id,currency_name_from,type_id) values (?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'WITHDRAWAL'))",count, traderId, currency);
+    public void withdrawCurrency(long traderId, double count, String currency, double commission) {
+        jdbcTemplate.update("INSERT INTO Transaction(commission,amount_from,trader_id,currency_name_from,type_id) values (?,?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'WITHDRAWAL'))",commission, count, traderId, currency);
     }
 
     @Override
-    public List <String> getTotalBalance(long traderId, String currency) {
+    public List <String> getTotalBalance(long traderId) {
        return jdbcTemplate.queryForList("select distinct currency_name_to from Transaction WHERE trader_id = ?",String.class, traderId);
     }
     @Override

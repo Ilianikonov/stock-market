@@ -41,7 +41,7 @@ public class BalanceController {
     }
     @GetMapping("/getTotalBalance")
     public ResponseEntity<GetBalanceResponse> getTotalBalance(@RequestParam long traderId,
-                                  @RequestParam String currency){
+                                                              @RequestParam String currency){
         double amount = balanceService.getTotalBalance(traderId, currency).getAmount();
         GetBalanceResponse getBalanceResponse = new GetBalanceResponse();
         getBalanceResponse.setCurrency(currency);
