@@ -43,7 +43,7 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
 
     @Override
     public List <String> getTotalBalance(long traderId) {
-       return jdbcTemplate.queryForList("select distinct currency_name_to from Transaction WHERE trader_id = ?",String.class, traderId);
+       return jdbcTemplate.queryForList("select distinct currency_name_to from Transaction WHERE trader_id = ? and currency_name_to is not null",String.class, traderId);
     }
     @Override
     public void currencyExchange(long traderId, String addCurrency, String reduceCurrency, double commission, double amountTo, double amountFrom) {

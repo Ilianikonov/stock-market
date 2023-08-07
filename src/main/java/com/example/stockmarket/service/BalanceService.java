@@ -36,12 +36,10 @@ public class BalanceService {
         balanceTotal.setCurrencyName(currency);
         List<String> currencyNameList = databaseТransactionRepository.getTotalBalance(traderId);
         for (String name: currencyNameList){
-            if (name != null) {
-                if (!Objects.equals(currency, name)) {
-                    amount += getBalanceByCurrency(traderId, name).getAmount() * databaseТransactionRepository.getCostCurrency(name, currency);
-                } else {
-                    amount += getBalanceByCurrency(traderId, currency).getAmount();
-                }
+            if (!Objects.equals(currency, name)) {
+                amount += getBalanceByCurrency(traderId, name).getAmount() * databaseТransactionRepository.getCostCurrency(name, currency);
+            } else {
+                amount += getBalanceByCurrency(traderId, currency).getAmount();
             }
         }
         balanceTotal.setAmount(amount);
