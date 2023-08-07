@@ -3,6 +3,7 @@ package com.example.stockmarket.dao;
 import com.example.stockmarket.dao.mapper.TraderMapper;
 import com.example.stockmarket.entity.Trader;
 import jakarta.annotation.Nullable;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+
 
 @Repository
 public class DatabaseTraderRepository implements TraderRepository{
