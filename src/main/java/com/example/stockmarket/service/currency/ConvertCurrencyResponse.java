@@ -1,10 +1,11 @@
 package com.example.stockmarket.service.currency;
 
+import lombok.Data;
 import lombok.Value;
 
 import java.util.Map;
 
-@Value
+@Data
 public class ConvertCurrencyResponse {
     private int status;
     private String massage;
