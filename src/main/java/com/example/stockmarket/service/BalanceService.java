@@ -35,7 +35,7 @@ public class BalanceService {
         Balance balanceTotal = new Balance();
         double amount = 0.0;
         balanceTotal.setCurrencyName(currency);
-        List<String> currencyNameList = databaseТransactionRepository.getTotalBalance(traderId);
+        List<String> currencyNameList = databaseТransactionRepository.getAllCurrenciesOfTrader(traderId);
         for (String name: currencyNameList){
             if (!Objects.equals(currency, name)) {
                 amount += getBalanceByCurrency(traderId, name).getAmount() * webCurrencyService.convert(name, currency, 1);
@@ -52,15 +52,5 @@ public class BalanceService {
         balance.setCurrencyName(currency);
         balance.setAmount(databaseТransactionRepository.getAmountOfAdditions(traderId,currency) - databaseТransactionRepository.getAmountOfSubtractions(traderId,currency));
         return balance;
-    }
-    public void currencyExchange(long traderId, double count, String addCurrency, String reduceCurrency) {
-        double commission = count * 0.1;
-        double amountTo = count - commission;
-        double amountFrom = (count + commission) * webCurrencyService.convert(addCurrency, reduceCurrency, count);
-
-        if (getBalanceByCurrency(traderId,reduceCurrency).getAmount() <  amountFrom){
-            throw new ObjectNotFoundException("нет Currency для обмена");
-        }
-        databaseТransactionRepository.currencyExchange(traderId, addCurrency, reduceCurrency, commission, amountTo, amountFrom);
     }
 }
