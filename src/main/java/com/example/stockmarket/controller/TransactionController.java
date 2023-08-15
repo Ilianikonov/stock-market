@@ -1,11 +1,12 @@
 package com.example.stockmarket.controller;
 
+import com.example.stockmarket.controller.response.ErrorResponse;
+import com.example.stockmarket.exception.ObjectNotFoundException;
 import com.example.stockmarket.service.TransactionService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/transaction")
@@ -36,5 +37,11 @@ public class TransactionController {
                                  @RequestParam String givenCurrency,
                                  @RequestParam String receivedCurrency) {
         transactionService.currencyExchange(traderId, count, givenCurrency, receivedCurrency);
+    }
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleException(ObjectNotFoundException objectNotFoundException){
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(objectNotFoundException.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

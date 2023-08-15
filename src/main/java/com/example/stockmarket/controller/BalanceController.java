@@ -4,7 +4,6 @@ import com.example.stockmarket.controller.response.ErrorResponse;
 import com.example.stockmarket.controller.response.GetBalanceResponse;
 import com.example.stockmarket.exception.ObjectNotFoundException;
 import com.example.stockmarket.service.BalanceService;
-import com.example.stockmarket.service.TransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
