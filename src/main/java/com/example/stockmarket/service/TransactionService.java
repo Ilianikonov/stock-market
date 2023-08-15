@@ -34,8 +34,8 @@ public class TransactionService {
 
     public void currencyExchange(long traderId, double count, String givenCurrency, String receivedCurrency) {
         double commission = count * 0.1;
-        double amountFrom = count - commission;
-        double amountTo = webCurrencyService.convert(givenCurrency, receivedCurrency, amountFrom);
+        double amountFrom = count;
+        double amountTo = webCurrencyService.convert(givenCurrency, receivedCurrency, amountFrom - commission);
 
         if (databaseТransactionRepository.getAmountOfAdditions(traderId,receivedCurrency) - databaseТransactionRepository.getAmountOfSubtractions(traderId,receivedCurrency) <  amountFrom){
             throw new ObjectNotFoundException("нет Currency для обмена");
