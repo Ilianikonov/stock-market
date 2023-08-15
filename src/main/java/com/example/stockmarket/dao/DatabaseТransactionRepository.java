@@ -4,12 +4,11 @@ import com.example.stockmarket.exception.ObjectNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 
 @Repository
-public class DatabaseТransactionRepository implements PortfolioRepository{
+public class DatabaseТransactionRepository implements TransactionRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public DatabaseТransactionRepository(JdbcTemplate jdbcTemplate) {
@@ -18,10 +17,10 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
 
     @Override
     public void makeDepositing(long traderId, double count, String currency, double commission) {
-        jdbcTemplate.update("INSERT INTO Transaction(commission,amount_to,trader_id,currency_name_to,type_id) values (?,?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'DEPOSITING'))", commission,count, traderId, currency);
+        jdbcTemplate.update("INSERT INTO Transaction(commission,amount_given,trader_id,currency_name_given,type_id) values (?,?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'DEPOSITING'))", commission,count, traderId, currency);
     }
     public double getAmountOfAdditions(long traderId, String currency) {
-        Double sumAmountTo = jdbcTemplate.queryForObject("select sum(amount_to) from Transaction WHERE trader_id = ? and currency_name_to = ?", Double.class, traderId, currency);
+        Double sumAmountTo = jdbcTemplate.queryForObject("select sum(amount_given) from Transaction WHERE trader_id = ? and currency_name_given = ?", Double.class, traderId, currency);
         if (sumAmountTo == null){
             throw new ObjectNotFoundException("не найдена валюта или трейдер");
         }else {
@@ -29,7 +28,7 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
         }
     }
     public double getAmountOfSubtractions(long traderId, String currency) {
-        Double amount = jdbcTemplate.queryForObject("select sum(amount_from) from Transaction WHERE trader_id = ? and currency_name_from = ?", Double.class, traderId, currency);
+        Double amount = jdbcTemplate.queryForObject("select sum(amount_received) from Transaction WHERE trader_id = ? and currency_name_received = ?", Double.class, traderId, currency);
         if(amount == null){
             amount = 0.0;
         }
@@ -38,15 +37,14 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
 
     @Override
     public void withdrawCurrency(long traderId, double count, String currency, double commission) {
-        jdbcTemplate.update("INSERT INTO Transaction(commission,amount_from,trader_id,currency_name_from,type_id) values (?,?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'WITHDRAWAL'))",commission, count, traderId, currency);
-    }
-
-    @Override
-    public List <String> getTotalBalance(long traderId) {
-       return jdbcTemplate.queryForList("select distinct currency_name_to from Transaction WHERE trader_id = ? and currency_name_to is not null",String.class, traderId);
+        jdbcTemplate.update("INSERT INTO Transaction(commission,amount_received,trader_id,currency_name_received,type_id) values (?,?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'WITHDRAWAL'))",commission, count, traderId, currency);
     }
     @Override
-    public void currencyExchange(long traderId, String addCurrency, String reduceCurrency, double commission, double amountTo, double amountFrom) {
-        jdbcTemplate.update("INSERT INTO Transaction(trader_id,currency_name_from,currency_name_to,commission,amount_to,amount_from,type_id) values (?, ?, ?, ?, ?, ?, (select transaction_type.id from transaction_type WHERE transaction_type.name = 'EXCHANGE'))", traderId, reduceCurrency,addCurrency,commission,amountTo,amountFrom);
+    public List <String> getAllCurrenciesOfTrader(long traderId) {
+        return jdbcTemplate.queryForList("select distinct currency_name_given from Transaction WHERE trader_id = ? and currency_name_given is not null",String.class, traderId);
+    }
+    @Override
+    public void currencyExchange(long traderId, String givenCurrency, String receivedCurrency, double commission, double amountTo, double amountFrom) {
+        jdbcTemplate.update("INSERT INTO Transaction(trader_id,currency_name_received,currency_name_given,commission,amount_given,amount_received,type_id) values (?, ?, ?, ?, ?, ?, (select transaction_type.id from transaction_type WHERE transaction_type.name = 'EXCHANGE'))", traderId, receivedCurrency,givenCurrency,commission,amountTo,amountFrom);
     }
 }

@@ -97,44 +97,44 @@ public class TransactionControllerTest {
     @Test
     public void currencyExchangeTest() throws Exception{
         Trader trader = createTrader("argtneqq");
-        String currencyTo = "USD";
-        String reduceCurrency = "RUB";
+        String givenCurrency = "USD";
+        String receivedCurrency = "RUB";
         double count = 124.12;
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
                         .param("traderId", String.valueOf(trader.getId()))
                         .param("amount", String.valueOf(121333))
-                        .param("currency", reduceCurrency))
+                        .param("currency", receivedCurrency))
                 .andExpect(status().isOk());
-        double amountReduceCurrency = getBalanceByCurrency(trader.getId(), reduceCurrency);
+        double amountReduceCurrency = getBalanceByCurrency(trader.getId(), receivedCurrency);
         System.out.println(amountReduceCurrency);
         mockMvc.perform(post(EXCHANGE_CURRENCY_URL)
                         .param("traderId", String.valueOf(trader.getId()))
                         .param("count", String.valueOf(count))
-                        .param("addCurrency", currencyTo)
-                        .param("reduceCurrency", reduceCurrency))
+                        .param("givenCurrency", givenCurrency)
+                        .param("receivedCurrency", receivedCurrency))
                 .andExpect(status().isOk());
-        double amountReduceCurrencyAfter = getBalanceByCurrency(trader.getId(),reduceCurrency);
+        double amountReduceCurrencyAfter = getBalanceByCurrency(trader.getId(),receivedCurrency);
         Assertions.assertTrue(amountReduceCurrency > amountReduceCurrencyAfter);
     }
     @Test
     public void currencyExchangeTest2() throws Exception{
         Trader trader = createTrader("awewveqq");
-        String addCurrency = "USD";
-        String reduceCurrency = "RUB";
+        String givenCurrency = "USD";
+        String receivedCurrency = "RUB";
         double count = 1241.12;
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
                         .param("traderId", String.valueOf(trader.getId()))
                         .param("amount", String.valueOf(count))
-                        .param("currency", reduceCurrency))
+                        .param("currency", receivedCurrency))
                 .andExpect(status().isOk());
-        double amountAddCurrency = getBalanceByCurrency(trader.getId(),reduceCurrency);
+        double amountAddCurrency = getBalanceByCurrency(trader.getId(),receivedCurrency);
         mockMvc.perform(post(EXCHANGE_CURRENCY_URL)
                         .param("traderId", String.valueOf(trader.getId()))
                         .param("count", String.valueOf(13))
-                        .param("addCurrency", addCurrency)
-                        .param("reduceCurrency", reduceCurrency))
+                        .param("givenCurrency", givenCurrency)
+                        .param("receivedCurrency", receivedCurrency))
                 .andExpect(status().isOk());
-        double amountAddCurrencyAfter = getBalanceByCurrency(trader.getId(),reduceCurrency);
+        double amountAddCurrencyAfter = getBalanceByCurrency(trader.getId(),receivedCurrency);
         Assertions.assertTrue(amountAddCurrency > amountAddCurrencyAfter);
     }
     public Trader createTrader (String name) {

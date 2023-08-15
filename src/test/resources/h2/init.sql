@@ -18,10 +18,10 @@ create table transaction_type
 create table transaction
 (
     id                 serial primary key,
-    currency_name_from varchar(10),
-    currency_name_to   varchar(10),
-    amount_from           double precision,
-    amount_to             double precision,
+    currency_name_received varchar(10),
+    currency_name_given   varchar(10),
+    amount_received           double precision,
+    amount_given             double precision,
     trader_id          int references trader (id),
     type_id            int references transaction_type (id),
     commission         double precision not null
@@ -33,5 +33,3 @@ INSERT INTO transaction_type (name)
 values ('WITHDRAWAL');
 INSERT INTO transaction_type (name)
 values ('EXCHANGE');
-INSERT INTO trader (name, password)
-values ('nikonov_ilia', 'nikonov_ilia');;
