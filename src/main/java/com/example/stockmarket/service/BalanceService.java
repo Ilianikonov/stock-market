@@ -22,7 +22,7 @@ public class BalanceService {
         Balance balanceTotal = new Balance();
         double amount = 0.0;
         balanceTotal.setCurrencyName(currency);
-        List<String> currencyNameList = databaseТransactionRepository.getTotalBalance(traderId);
+        List<String> currencyNameList = databaseТransactionRepository.getAllCurrenciesOfTrader(traderId);
         for (String name: currencyNameList){
             if (!Objects.equals(currency, name)) {
                 amount += getBalanceByCurrency(traderId, name).getAmount() * webCurrencyService.getCostCurrency(name, currency);

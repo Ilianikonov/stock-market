@@ -20,7 +20,7 @@ public class TransactionController {
     public void makeDepositing(@RequestParam long traderId,
                                @RequestParam double amount,
                                @RequestParam String currency){
-        transactionService.makeDepositing(traderId,amount,currency);
+        transactionService.makeDepositing(traderId, amount, currency);
     }
 
     @PostMapping("/withdrawCurrency")
@@ -32,9 +32,9 @@ public class TransactionController {
     @PostMapping("/currencyExchange")
     public void currencyExchange(@RequestParam long traderId,
                                  @RequestParam double count,
-                                 @RequestParam String addCurrency,
-                                 @RequestParam String reduceCurrency) {
-        transactionService.currencyExchange(traderId, count, addCurrency, reduceCurrency);
+                                 @RequestParam String givenCurrency,
+                                 @RequestParam String receivedCurrency) {
+        transactionService.currencyExchange(traderId, count, givenCurrency, receivedCurrency);
     }
     @ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(ObjectNotFoundException objectNotFoundException){
