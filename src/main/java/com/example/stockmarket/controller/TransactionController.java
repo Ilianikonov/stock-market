@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/Transaction")
+@RequestMapping("/transaction")
 @Slf4j
 public class TransactionController {
     private final TransactionService transactionService;
@@ -33,8 +33,8 @@ public class TransactionController {
     @PostMapping("/currencyExchange")
     public void currencyExchange(@RequestParam long traderId,
                                  @RequestParam double count,
-                                 @RequestParam String addCurrency,
-                                 @RequestParam String reduceCurrency) {
-        transactionService.currencyExchange(traderId, count, addCurrency, reduceCurrency);
+                                 @RequestParam String givenCurrency,
+                                 @RequestParam String receivedCurrency) {
+        transactionService.currencyExchange(traderId, count, givenCurrency, receivedCurrency);
     }
 }

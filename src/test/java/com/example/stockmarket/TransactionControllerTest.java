@@ -43,10 +43,9 @@ public class TransactionControllerTest {
     @Autowired
     private TraderService traderService;
     private static final String GET_CURRENCY_URL = "/balance/getBalanceByCurrency";
-    private static final String MAKE_DEPOSITING_URL = "/balance/makeDepositing";
-    private static final String WITHDRAW_CURRENCY_URL = "/balance/withdrawCurrency";
-    private static final String EXCHANGE_CURRENCY_URL = "/balance/currencyExchange";
-    private static final String GET_TOTAL_BALANCE_URL = "/balance/getTotalBalance";
+    private static final String MAKE_DEPOSITING_URL = "/transaction/makeDepositing";
+    private static final String WITHDRAW_CURRENCY_URL = "/transaction/withdrawCurrency";
+    private static final String EXCHANGE_CURRENCY_URL = "/transaction/currencyExchange";
     @BeforeEach
     public void setup(){
         ReflectionTestUtils.setField(transactionService, "webCurrencyService",mockWebCurrencyService);
@@ -116,24 +115,24 @@ public class TransactionControllerTest {
     @Test
     public void currencyExchangeTest() throws Exception{
         Trader trader = createTrader("argtneqq");
-        String currencyTo = "USD";
-        String currencyFrom = "RUB";
+        String givenCurrency = "USD";
+        String receivedCurrency = "RUB";
         double count = 100;
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
                         .param("traderId", String.valueOf(trader.getId()))
                         .param("amount", String.valueOf(100000))
-                        .param("currency", currencyFrom))
+                        .param("currency", receivedCurrency))
                 .andExpect(status().isOk());
-        double amountReduceCurrency = getBalanceByCurrency(trader.getId(), currencyFrom);
+        double amountReduceCurrency = getBalanceByCurrency(trader.getId(), receivedCurrency);
         System.out.println(amountReduceCurrency);
-        Mockito.when(mockWebCurrencyService.convert(Mockito.eq(currencyFrom), Mockito.eq(currencyTo))).thenReturn(0.01);
+        Mockito.when(mockWebCurrencyService.convert(Mockito.eq(receivedCurrency), Mockito.eq(givenCurrency))).thenReturn(0.01);
         mockMvc.perform(post(EXCHANGE_CURRENCY_URL)
                         .param("traderId", String.valueOf(trader.getId()))
                         .param("count", String.valueOf(count))
-                        .param("addCurrency", currencyTo)
-                        .param("reduceCurrency", currencyFrom))
+                        .param("addCurrency", givenCurrency)
+                        .param("reduceCurrency", receivedCurrency))
                 .andExpect(status().isOk());
-        double amountReduceCurrencyAfter = getBalanceByCurrency(trader.getId(),currencyFrom);
+        double amountReduceCurrencyAfter = getBalanceByCurrency(trader.getId(),receivedCurrency);
         Assertions.assertEquals(amountReduceCurrencyAfter,90000);
     }
     @Test
@@ -156,53 +155,6 @@ public class TransactionControllerTest {
                 .andExpect(status().isOk());
         double amountAddCurrencyAfter = getBalanceByCurrency(trader.getId(),reduceCurrency);
         Assertions.assertTrue(amountAddCurrency > amountAddCurrencyAfter);
-    }
-@Test
-public void getTotalBalance() throws Exception{ // todo: дописать тест
-    String currency = "RUB";
-    Trader trader = createTrader("aefsweveqq");
-    double count = 1244.12;
-    mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                    .param("traderId", String.valueOf(trader.getId()))
-                    .param("amount", String.valueOf(124400))
-                    .param("currency", currency))
-            .andExpect(status().isOk());
-    mockMvc.perform(get(GET_TOTAL_BALANCE_URL)
-                    .param("traderId", String.valueOf(trader.getId()))
-                    .param("currency", currency))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.amount").value(124400));
-    mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                    .param("traderId", String.valueOf(trader.getId()))
-                    .param("amount", String.valueOf(1222))
-                    .param("currency", "USD"))
-            .andExpect(status().isOk());
-    mockMvc.perform(get(GET_TOTAL_BALANCE_URL)
-                    .param("traderId", String.valueOf(trader.getId()))
-                    .param("currency", currency))
-                    .andExpect(status().isOk());
-}
-    @Test
-    public void getBalanceByCurrency() throws Exception{
-        Trader trader = createTrader("aefsweeqq");
-        double amount = 10.4;
-        String currency = "RUB";
-        mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(amount))
-                        .param("currency", currency))
-                .andExpect(status().isOk());
-        double amountCurrency = getBalanceByCurrency(trader.getId(),currency);
-        Assertions.assertTrue(amountCurrency >= 0.0);
-    }
-    @Test
-    public void getBalanceByCurrency2() throws Exception{
-        Trader trader = createTrader("aefseqq");
-        String currency = "FWA";
-        mockMvc.perform(get(GET_CURRENCY_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("currency", currency))
-                .andExpect(status().isNotFound());
     }
     public Trader createTrader (String name) {
         Trader trader = new Trader();
