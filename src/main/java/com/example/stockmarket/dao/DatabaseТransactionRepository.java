@@ -39,9 +39,7 @@ public class DatabaseТransactionRepository implements PortfolioRepository{
     public void withdrawCurrency(long traderId, double count, String currency, double commission) {
         jdbcTemplate.update("INSERT INTO Transaction(commission,amount_from,trader_id,currency_name_from,type_id) values (?,?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'WITHDRAWAL'))",commission, count, traderId, currency);
     }
-
-    @Override
-    public List <String> getTotalBalance(long traderId) {
+    public List <String> getAllCurrenciesOfTrader(long traderId) {
        return jdbcTemplate.queryForList("select distinct currency_name_to from Transaction WHERE trader_id = ? and currency_name_to is not null",String.class, traderId);
     }
     @Override

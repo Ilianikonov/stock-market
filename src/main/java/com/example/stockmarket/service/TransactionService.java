@@ -31,36 +31,15 @@ public class TransactionService {
         }
     }
 
-    public Balance getTotalBalance(long traderId, String currency) {
-        Balance balanceTotal = new Balance();
-        double amount = 0.0;
-        balanceTotal.setCurrencyName(currency);
-        List<String> currencyNameList = databaseТransactionRepository.getTotalBalance(traderId);
-        for (String name: currencyNameList){
-            if (!Objects.equals(currency, name)) {
-                amount += webCurrencyService.convert(name, currency, getBalanceByCurrency(traderId, name).getAmount());
-            } else {
-                amount += getBalanceByCurrency(traderId, currency).getAmount();
-            }
-        }
-        balanceTotal.setAmount(amount);
-        return balanceTotal;
-    }
 
-    public Balance getBalanceByCurrency(long traderId, String currency) {
-        Balance balance = new Balance();
-        balance.setCurrencyName(currency);
-        balance.setAmount(databaseТransactionRepository.getAmountOfAdditions(traderId,currency) - databaseТransactionRepository.getAmountOfSubtractions(traderId,currency));
-        return balance;
-    }
-    public void currencyExchange(long traderId, double count, String currencyTo, String currencyFrom) {
+    public void currencyExchange(long traderId, double count, String givenCurrency, String receivedCurrency) {
         double commission = count * 0.1;
         double amountFrom = count - commission;
-        double amountTo = webCurrencyService.convert(currencyTo, currencyFrom, amountFrom);
+        double amountTo = webCurrencyService.convert(givenCurrency, receivedCurrency, amountFrom);
 
-        if (getBalanceByCurrency(traderId,currencyFrom).getAmount() <  amountFrom){
+        if (databaseТransactionRepository.getAmountOfAdditions(traderId,receivedCurrency) - databaseТransactionRepository.getAmountOfSubtractions(traderId,receivedCurrency) <  amountFrom){
             throw new ObjectNotFoundException("нет Currency для обмена");
         }
-        databaseТransactionRepository.currencyExchange(traderId, currencyTo, currencyFrom, commission, amountTo, amountFrom);
+        databaseТransactionRepository.currencyExchange(traderId, givenCurrency, receivedCurrency, commission, amountTo, amountFrom);
     }
 }
