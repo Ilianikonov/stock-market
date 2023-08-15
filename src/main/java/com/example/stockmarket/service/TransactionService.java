@@ -13,15 +13,15 @@ public class TransactionService {
     private final WebCurrencyService webCurrencyService;
     private final BalanceService balanceService;
 
-    public void makeDepositing(long traderId, double givenCurrency, String currency) {
+    public void makeDepositing(long traderId, double givenAmount, String givenCurrency) {
         double commission = 0;
-        databaseТransactionRepository.makeDepositing(traderId, givenCurrency, currency, commission);
+        databaseТransactionRepository.makeDepositing(traderId, givenAmount, givenCurrency, commission);
     }
 
-    public void withdrawCurrency(long traderId, double receivedCurrency, String currency) {
+    public void withdrawCurrency(long traderId, double receivedAmount, String currency) {
         double commission = 0;
-        if ((databaseТransactionRepository.getAmountOfAdditions(traderId, currency) - databaseТransactionRepository.getAmountOfSubtractions(traderId, currency)) >= receivedCurrency) {
-            databaseТransactionRepository.withdrawCurrency(traderId, receivedCurrency, currency, commission);
+        if ((databaseТransactionRepository.getAmountOfAdditions(traderId, currency) - databaseТransactionRepository.getAmountOfSubtractions(traderId, currency)) >= receivedAmount) {
+            databaseТransactionRepository.withdrawCurrency(traderId, receivedAmount, currency, commission);
         } else {
             throw new ObjectNotFoundException("недостаточно средств для вывода");
         }
