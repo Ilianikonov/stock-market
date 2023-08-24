@@ -2,6 +2,7 @@ package com.example.stockmarket.service;
 
 import com.example.stockmarket.dao.DatabaseТransactionRepository;
 import com.example.stockmarket.exception.ObjectNotFoundException;
+import com.example.stockmarket.service.currency.CurrencyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,31 +10,29 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TransactionService {
     private final DatabaseТransactionRepository databaseТransactionRepository;
-    private final WebCurrencyService webCurrencyService;
+    private final CurrencyService currencyService;
     private final BalanceService balanceService;
 
-    public void makeDepositing(long traderId, double count, String currency) {
+    public void makeDepositing(long traderId, double givenCurrency, String currency) {
         double commission = 0;
-        databaseТransactionRepository.makeDepositing(traderId, count, currency, commission);
+        databaseТransactionRepository.makeDepositing(traderId, givenCurrency, currency, commission);
     }
 
-    public void withdrawCurrency(long traderId, double count, String currency) {
+    public void withdrawCurrency(long traderId, double receivedCurrency, String currency) {
         double commission = 0;
-        if ((databaseТransactionRepository.getAmountOfAdditions(traderId,currency) - databaseТransactionRepository.getAmountOfSubtractions(traderId,currency)) >= count){
-            databaseТransactionRepository.withdrawCurrency(traderId, count, currency, commission);
-        }else {
+        if ((databaseТransactionRepository.getAmountOfAdditions(traderId, currency) - databaseТransactionRepository.getAmountOfSubtractions(traderId, currency)) >= receivedCurrency) {
+            databaseТransactionRepository.withdrawCurrency(traderId, receivedCurrency, currency, commission);
+        } else {
             throw new ObjectNotFoundException("недостаточно средств для вывода");
         }
     }
 
-    public void currencyExchange(long traderId, double count, String addCurrency, String reduceCurrency) {
-        double commission = count * 0.1;
-        double amountTo = count - commission;
-        double amountFrom = (count + commission) * webCurrencyService.getCostCurrency(addCurrency, reduceCurrency);
-
-        if (balanceService.getBalanceByCurrency(traderId,reduceCurrency).getAmount() <  amountFrom){
+    public void currencyExchange(long traderId, double receivedAmount, String givenCurrency, String receivedCurrency) {
+        double commission = receivedAmount * 0.1;
+        double givenAmount = currencyService.convert(givenCurrency, receivedCurrency, receivedAmount - commission);
+        if (balanceService.getBalanceByCurrency(traderId, receivedCurrency).getAmount() < receivedAmount) {
             throw new ObjectNotFoundException("нет Currency для обмена");
         }
-        databaseТransactionRepository.currencyExchange(traderId, addCurrency, reduceCurrency, commission, amountTo, amountFrom);
+        databaseТransactionRepository.currencyExchange(traderId, givenCurrency, receivedCurrency, commission, givenAmount, receivedAmount);
     }
 }
