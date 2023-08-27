@@ -3,9 +3,6 @@ package com.example.stockmarket.service;
 import com.example.stockmarket.dao.DatabaseТransactionRepository;
 import com.example.stockmarket.entity.Balance;
 import com.example.stockmarket.service.currency.CurrencyService;
-import com.example.stockmarket.exception.NotEnoughMoneyException;
-import com.example.stockmarket.exception.ObjectNotFoundException;
-import com.example.stockmarket.service.currency.WebCurrencyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
