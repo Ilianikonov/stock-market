@@ -1,6 +1,7 @@
 package com.example.stockmarket.controller;
 
 import com.example.stockmarket.controller.response.ErrorResponse;
+import com.example.stockmarket.exception.NotEnoughMoneyException;
 import com.example.stockmarket.exception.ObjectNotFoundException;
 import com.example.stockmarket.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -29,17 +30,12 @@ public class TransactionController {
                                  @RequestParam String currency){
         transactionService.withdrawCurrency(traderId, amount, currency);
     }
+
     @PostMapping("/currencyExchange")
     public void currencyExchange(@RequestParam long traderId,
                                  @RequestParam double count,
                                  @RequestParam String givenCurrency,
                                  @RequestParam String receivedCurrency) {
         transactionService.currencyExchange(traderId, count, givenCurrency, receivedCurrency);
-    }
-    @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleException(ObjectNotFoundException objectNotFoundException){
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setMessage(objectNotFoundException.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

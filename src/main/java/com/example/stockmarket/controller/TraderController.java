@@ -26,16 +26,19 @@ public class TraderController {
         traderConverter.convertToTrader(createTraderRequest);
         return traderConverter.convertToTrader(traderService.createTrader(traderConverter.convertToTrader(createTraderRequest)));
     }
+
     @PostMapping("/updateTrader")
     public TraderResponse updateTrader (@RequestBody UpdateTraderRequest updateTraderRequest) {
         Trader trader = traderService.updateTrader(traderConverter.convertToTrader(updateTraderRequest));
         return traderConverter.convertToTrader(trader);
     }
+
     @DeleteMapping("/deleteTraderById/{id}")
     public TraderResponse deleteTraderById (@PathVariable Long id){
         Trader trader = traderService.deleteTraderById(id);
         return traderConverter.convertToTrader(trader);
     }
+
     @GetMapping("/getTraderById/{id}")
     public ResponseEntity<TraderResponse> getTraderById(@PathVariable Long id) {
         Trader trader = traderService.getTraderById(id);
@@ -43,11 +46,5 @@ public class TraderController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(traderConverter.convertToTrader(trader));
-    }
-    @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleException(ObjectNotFoundException objectNotFoundException){
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setMessage(objectNotFoundException.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

@@ -2,6 +2,7 @@ package com.example.stockmarket.controller;
 
 import com.example.stockmarket.controller.response.ErrorResponse;
 import com.example.stockmarket.controller.response.GetBalanceResponse;
+import com.example.stockmarket.exception.NotEnoughMoneyException;
 import com.example.stockmarket.exception.ObjectNotFoundException;
 import com.example.stockmarket.service.BalanceService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class BalanceController {
         getBalanceResponse.setAmount(amount);
         return new ResponseEntity<>(getBalanceResponse, HttpStatus.OK);
     }
+
     @GetMapping("/getBalanceByCurrency")
     public ResponseEntity<GetBalanceResponse> getBalanceByCurrency(@RequestParam long traderId,
                                                                    @RequestParam String currency){
@@ -34,11 +36,5 @@ public class BalanceController {
         getBalanceResponse.setCurrency(currency);
         getBalanceResponse.setAmount(amount);
         return new ResponseEntity<>(getBalanceResponse, HttpStatus.OK);
-    }
-    @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleException(ObjectNotFoundException objectNotFoundException){
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setMessage(objectNotFoundException.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

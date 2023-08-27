@@ -1,7 +1,7 @@
 package com.example.stockmarket.service;
 
 import com.example.stockmarket.dao.DatabaseТransactionRepository;
-import com.example.stockmarket.exception.ObjectNotFoundException;
+import com.example.stockmarket.exception.NotEnoughMoneyException;
 import com.example.stockmarket.service.currency.WebCurrencyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class TransactionService {
         if ((databaseТransactionRepository.getAmountOfAdditions(traderId, currency) - databaseТransactionRepository.getAmountOfSubtractions(traderId, currency)) >= receivedAmount) {
             databaseТransactionRepository.withdrawCurrency(traderId, receivedAmount, currency, commission);
         } else {
-            throw new ObjectNotFoundException("недостаточно средств для вывода");
+            throw new NotEnoughMoneyException("недостаточно средств для вывода");
         }
     }
 
@@ -31,7 +31,7 @@ public class TransactionService {
         double commission = receivedAmount * 0.1;
         double givenAmount = webCurrencyService.convert(givenCurrency, receivedCurrency, receivedAmount - commission);
         if (balanceService.getBalanceByCurrency(traderId, receivedCurrency).getAmount() < receivedAmount) {
-            throw new ObjectNotFoundException("нет Currency для обмена");
+            throw new NotEnoughMoneyException("недостаточно средств для обмена");
         }
         databaseТransactionRepository.currencyExchange(traderId, givenCurrency, receivedCurrency, commission, givenAmount, receivedAmount);
     }
