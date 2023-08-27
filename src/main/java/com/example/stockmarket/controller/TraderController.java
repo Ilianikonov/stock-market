@@ -3,8 +3,10 @@ package com.example.stockmarket.controller;
 import com.example.stockmarket.controller.converter.TraderConverter;
 import com.example.stockmarket.controller.request.CreateTraderRequest;
 import com.example.stockmarket.controller.request.UpdateTraderRequest;
+import com.example.stockmarket.controller.response.ErrorResponse;
 import com.example.stockmarket.controller.response.TraderResponse;
 import com.example.stockmarket.entity.Trader;
+import com.example.stockmarket.exception.ObjectNotFoundException;
 import com.example.stockmarket.service.TraderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,5 +43,11 @@ public class TraderController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(traderConverter.convertToTrader(trader));
+    }
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleException(ObjectNotFoundException objectNotFoundException){
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(objectNotFoundException.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }
