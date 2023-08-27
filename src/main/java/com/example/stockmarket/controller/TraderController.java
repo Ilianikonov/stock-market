@@ -3,8 +3,10 @@ package com.example.stockmarket.controller;
 import com.example.stockmarket.controller.converter.TraderConverter;
 import com.example.stockmarket.controller.request.CreateTraderRequest;
 import com.example.stockmarket.controller.request.UpdateTraderRequest;
+import com.example.stockmarket.controller.response.ErrorResponse;
 import com.example.stockmarket.controller.response.TraderResponse;
 import com.example.stockmarket.entity.Trader;
+import com.example.stockmarket.exception.ObjectNotFoundException;
 import com.example.stockmarket.service.TraderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,16 +26,19 @@ public class TraderController {
         traderConverter.convertToTrader(createTraderRequest);
         return traderConverter.convertToTrader(traderService.createTrader(traderConverter.convertToTrader(createTraderRequest)));
     }
+
     @PostMapping("/updateTrader")
     public TraderResponse updateTrader (@RequestBody UpdateTraderRequest updateTraderRequest) {
         Trader trader = traderService.updateTrader(traderConverter.convertToTrader(updateTraderRequest));
         return traderConverter.convertToTrader(trader);
     }
+
     @DeleteMapping("/deleteTraderById/{id}")
     public TraderResponse deleteTraderById (@PathVariable Long id){
         Trader trader = traderService.deleteTraderById(id);
         return traderConverter.convertToTrader(trader);
     }
+
     @GetMapping("/getTraderById/{id}")
     public ResponseEntity<TraderResponse> getTraderById(@PathVariable Long id) {
         Trader trader = traderService.getTraderById(id);
