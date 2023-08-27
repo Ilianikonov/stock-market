@@ -2,7 +2,7 @@ package com.example.stockmarket.service;
 
 import com.example.stockmarket.dao.DatabaseТransactionRepository;
 import com.example.stockmarket.exception.ObjectNotFoundException;
-import com.example.stockmarket.service.currency.WebCurrencyService;
+import com.example.stockmarket.service.currency.CurrencyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TransactionService {
     private final DatabaseТransactionRepository databaseТransactionRepository;
-    private final WebCurrencyService webCurrencyService;
+    private final CurrencyService currencyService;
     private final BalanceService balanceService;
 
     public void makeDepositing(long traderId, double givenAmount, String givenCurrency) {
@@ -29,7 +29,7 @@ public class TransactionService {
 
     public void currencyExchange(long traderId, double receivedAmount, String givenCurrency, String receivedCurrency) {
         double commission = receivedAmount * 0.1;
-        double givenAmount = webCurrencyService.convert(givenCurrency, receivedCurrency, receivedAmount - commission);
+        double givenAmount = currencyService.convert(givenCurrency, receivedCurrency, receivedAmount - commission);
         if (balanceService.getBalanceByCurrency(traderId, receivedCurrency).getAmount() < receivedAmount) {
             throw new ObjectNotFoundException("нет Currency для обмена");
         }
