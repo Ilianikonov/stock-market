@@ -1,21 +1,29 @@
 package com.example.stockmarket.service.currency;
 
-import com.example.stockmarket.exception.ObjectNotFoundException;
+import com.example.stockmarket.config.WebCurrencyServiceConfig;
 import com.example.stockmarket.exception.WebCurrencyServiceException;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class WebCurrencyService {
+public class WebCurrencyService implements CurrencyService {
     private final RestTemplate restTemplate;
+    private final WebCurrencyServiceConfig webCurrencyServiceConfig;
     public double convert(String receivedCurrency, String givenCurrency){
         String currencyPair = receivedCurrency + givenCurrency;
-        String url = "https://currate.ru/api/?get=rates&pairs="+ currencyPair + "&key=8290c72cf52d76f9350c7006a6fc9da4";
-        ConvertCurrencyResponse convertCurrencyResponse = restTemplate.getForObject(url,ConvertCurrencyResponse.class);
+        Map <String, String> params = new HashMap<>();
+        params.put("get", "rates");
+        params.put("pairs", currencyPair);
+        params.put("key", webCurrencyServiceConfig.getKey());
+        String url = webCurrencyServiceConfig.getUrl() + "/api/?get={get}&pairs={pairs}&key={key}";
+
+        ConvertCurrencyResponse convertCurrencyResponse = restTemplate.getForObject(url, ConvertCurrencyResponse.class, params);
         if (convertCurrencyResponse != null && convertCurrencyResponse.getStatus() == 200) {
             return convertCurrencyResponse.getData().get(currencyPair);
         } else {
