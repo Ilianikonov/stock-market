@@ -50,6 +50,7 @@ public class TraderControllerTest {
            Assertions.assertEquals(traderResponse.getId(),trader.getId());
            Assertions.assertEquals(traderResponse.getName(),trader.getName());
     }
+
     @Test
     public void updateTraderTest() throws Exception{
            long id = createTrader("efewf","wefef").getId();
@@ -64,6 +65,7 @@ public class TraderControllerTest {
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value("sgsgd"));
     }
+
     @Test
     public void deleteTraderByIdTest() throws Exception {
         Trader trader = createTrader("IliaNikonov","Nikonov1997!");
@@ -72,12 +74,14 @@ public class TraderControllerTest {
         mockMvc.perform(get(GET_TRADER_BY_ID_URL,trader.getId()))
                 .andExpect(status().isNotFound());
     }
+
     private Trader getTraderById (long id) throws Exception {
         String response = mockMvc.perform(get(GET_TRADER_BY_ID_URL,id))
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
             return objectMapper.readValue(response, Trader.class);
     }
+
     private Trader createTrader(String name, String password) throws Exception {
            CreateTraderRequest createTraderRequest = new CreateTraderRequest();
         createTraderRequest.setName(name);
@@ -90,6 +94,7 @@ public class TraderControllerTest {
         TraderResponse traderResponse = objectMapper.readValue(jsonTrader, TraderResponse.class);
         return convertToTrader(traderResponse);
     }
+
     private Trader convertToTrader(TraderResponse traderResponse){
         Trader trader = new Trader();
         trader.setId(traderResponse.getId());

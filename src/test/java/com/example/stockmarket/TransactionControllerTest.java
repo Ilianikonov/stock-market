@@ -3,16 +3,22 @@ package com.example.stockmarket;
 import com.example.stockmarket.controller.response.GetBalanceResponse;
 import com.example.stockmarket.entity.Trader;
 import com.example.stockmarket.service.TraderService;
+import com.example.stockmarket.service.currency.WebCurrencyService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -21,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TransactionControllerTest {
 
@@ -31,6 +37,10 @@ public class TransactionControllerTest {
     private ObjectMapper objectMapper;
     @Autowired
     TraderService traderService;
+    @InjectMocks
+    private WebCurrencyService webCurrencyService;
+    @Mock
+    private RestTemplate restTemplate;
 
     private static final String GET_CURRENCY_URL = "/balance/getBalanceByCurrency";
     private static final String MAKE_DEPOSITING_URL = "/transaction/makeDepositing";
@@ -45,6 +55,7 @@ public class TransactionControllerTest {
                 .andReturn().getResponse().getContentAsString();
         return objectMapper.readValue(response, GetBalanceResponse.class).getAmount();
     }
+
     @Test
     public void makeDepositing() throws Exception{
         Trader trader = createTrader("awefweeqq");
