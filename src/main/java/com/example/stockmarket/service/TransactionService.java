@@ -33,6 +33,6 @@ public class TransactionService {
         if (balanceService.getBalanceByCurrency(traderId, receivedCurrency).getAmount() < receivedAmount) {
             throw new NotEnoughMoneyException("недостаточно средств для обмена");
         }
-        databaseТransactionRepository.currencyExchange(traderId, givenCurrency, receivedCurrency, commission, receivedAmount, givenAmount);
+        databaseТransactionRepository.currencyExchange(traderId, givenCurrency, receivedCurrency, commission, givenAmount, receivedAmount);
     }
 }
