@@ -8,6 +8,8 @@ create table trader
     name     varchar(12) not null unique,
     password varchar(30) not null
 );
+create index trader_id_index on trader(id);
+create index trader_name_index on trader(name);
 
 create table transaction_type
 (
@@ -26,6 +28,8 @@ create table transaction
     type_id            int references transaction_type (id),
     commission         double precision not null
 );
+create index transaction_trader_id_index on transaction(trader_id);
+create index transaction_id_index on transaction(id);
 
 INSERT INTO transaction_type (name)
 values ('DEPOSITING');
