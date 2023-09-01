@@ -17,7 +17,7 @@ public class DatabaseТransactionRepository implements TransactionRepository {
 
     @Override
     public void withdrawCurrency(long traderId, double count, String currency, double commission) {
-        jdbcTemplate.update("INSERT INTO Transaction(commission,amount_given,trader_id,currency_name_given,type_id) values (?,?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'DEPOSITING'))", commission,count, traderId, currency);
+        jdbcTemplate.update("INSERT INTO Transaction(commission,amount_given,trader_id,currency_name_given,type_id) values (?,?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'WITHDRAWAL'))", commission,count, traderId, currency);
     }
     public double getAmountOfSubtractions(long traderId, String currency) {
         Double amount = jdbcTemplate.queryForObject("select sum(amount_given) from Transaction WHERE trader_id = ? and currency_name_given = ?", Double.class, traderId, currency);
@@ -37,14 +37,14 @@ public class DatabaseТransactionRepository implements TransactionRepository {
 
     @Override
     public void makeDepositing(long traderId, double count, String currency, double commission) {
-        jdbcTemplate.update("INSERT INTO Transaction(commission,amount_received,trader_id,currency_name_received,type_id) values (?,?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'WITHDRAWAL'))",commission, count, traderId, currency);
+        jdbcTemplate.update("INSERT INTO Transaction(commission,amount_received,trader_id,currency_name_received,type_id) values (?,?,?,?,(select transaction_type.id from transaction_type WHERE transaction_type.name = 'DEPOSITING'))",commission, count, traderId, currency);
     }
     @Override
     public List <String> getAllCurrenciesOfTrader(long traderId) {
         return jdbcTemplate.queryForList("select distinct currency_name_given from Transaction WHERE trader_id = ? and currency_name_given is not null",String.class, traderId);
     }
     @Override
-    public void currencyExchange(long traderId, String givenCurrency, String receivedCurrency, double commission, double amountTo, double amountFrom) {
-        jdbcTemplate.update("INSERT INTO Transaction(trader_id,currency_name_received,currency_name_given,commission,amount_given,amount_received,type_id) values (?, ?, ?, ?, ?, ?, (select transaction_type.id from transaction_type WHERE transaction_type.name = 'EXCHANGE'))", traderId, receivedCurrency,givenCurrency,commission,amountTo,amountFrom);
+    public void currencyExchange(long traderId, String givenCurrency, String receivedCurrency, double commission, double receivedAmount, double givenAmount) {
+        jdbcTemplate.update("INSERT INTO Transaction(trader_id,currency_name_received,currency_name_given,commission,amount_received,amount_given,type_id) values (?, ?, ?, ?, ?, ?, (select transaction_type.id from transaction_type WHERE transaction_type.name = 'EXCHANGE'))", traderId, receivedCurrency,givenCurrency,commission,receivedAmount,givenAmount);
     }
 }

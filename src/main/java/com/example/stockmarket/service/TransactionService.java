@@ -13,15 +13,15 @@ public class TransactionService {
     private final CurrencyService currencyService;
     private final BalanceService balanceService;
 
-    public void makeDepositing(long traderId, double givenAmount, String givenCurrency) {
+    public void makeDepositing(long traderId, double receivedAmount, String receivedCurrency) {
         double commission = 0;
-        databaseТransactionRepository.makeDepositing(traderId, givenAmount, givenCurrency, commission);
+        databaseТransactionRepository.makeDepositing(traderId, receivedAmount, receivedCurrency, commission);
     }
 
-    public void withdrawCurrency(long traderId, double receivedAmount, String currency) {
+    public void withdrawCurrency(long traderId, double givenAmount, String givenCurrency) {
         double commission = 0;
-        if ((databaseТransactionRepository.getAmountOfAdditions(traderId, currency) - databaseТransactionRepository.getAmountOfSubtractions(traderId, currency)) >= receivedAmount) {
-            databaseТransactionRepository.withdrawCurrency(traderId, receivedAmount, currency, commission);
+        if ((databaseТransactionRepository.getAmountOfAdditions(traderId, givenCurrency) - databaseТransactionRepository.getAmountOfSubtractions(traderId, givenCurrency)) >= givenAmount) {
+            databaseТransactionRepository.withdrawCurrency(traderId, givenAmount, givenCurrency, commission);
         } else {
             throw new NotEnoughMoneyException("недостаточно средств для вывода");
         }
@@ -33,6 +33,6 @@ public class TransactionService {
         if (balanceService.getBalanceByCurrency(traderId, givenCurrency).getAmount() + commission <= givenAmount) {
             throw new NotEnoughMoneyException("недостаточно средств для обмена");
         }
-        databaseТransactionRepository.currencyExchange(traderId, givenCurrency, receivedCurrency, commission, givenAmount, receivedAmount);
+        databaseТransactionRepository.currencyExchange(traderId, givenCurrency, receivedCurrency, commission, receivedAmount, givenAmount);
     }
 }
