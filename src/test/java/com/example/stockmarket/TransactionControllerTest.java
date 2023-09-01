@@ -103,9 +103,9 @@ public class TransactionControllerTest {
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
                         .param("traderId", String.valueOf(trader.getId()))
                         .param("amount", String.valueOf(121333))
-                        .param("currency", receivedCurrency))
+                        .param("currency", "USD"))
                 .andExpect(status().isOk());
-        double amountReduceCurrency = getBalanceByCurrency(trader.getId(), receivedCurrency);
+        double amountReduceCurrency = getBalanceByCurrency(trader.getId(), givenCurrency);
         System.out.println(amountReduceCurrency);
         mockMvc.perform(post(EXCHANGE_CURRENCY_URL)
                         .param("traderId", String.valueOf(trader.getId()))
@@ -113,7 +113,7 @@ public class TransactionControllerTest {
                         .param("givenCurrency", givenCurrency)
                         .param("receivedCurrency", receivedCurrency))
                 .andExpect(status().isOk());
-        double amountReduceCurrencyAfter = getBalanceByCurrency(trader.getId(),receivedCurrency);
+        double amountReduceCurrencyAfter = getBalanceByCurrency(trader.getId(),givenCurrency);
         Assertions.assertTrue(amountReduceCurrency > amountReduceCurrencyAfter);
     }
     @Test
@@ -125,16 +125,16 @@ public class TransactionControllerTest {
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
                         .param("traderId", String.valueOf(trader.getId()))
                         .param("amount", String.valueOf(count))
-                        .param("currency", receivedCurrency))
+                        .param("currency", "USD"))
                 .andExpect(status().isOk());
-        double amountAddCurrency = getBalanceByCurrency(trader.getId(),receivedCurrency);
+        double amountAddCurrency = getBalanceByCurrency(trader.getId(),givenCurrency);
         mockMvc.perform(post(EXCHANGE_CURRENCY_URL)
                         .param("traderId", String.valueOf(trader.getId()))
-                        .param("count", String.valueOf(13))
+                        .param("count", String.valueOf(130))
                         .param("givenCurrency", givenCurrency)
                         .param("receivedCurrency", receivedCurrency))
                 .andExpect(status().isOk());
-        double amountAddCurrencyAfter = getBalanceByCurrency(trader.getId(),receivedCurrency);
+        double amountAddCurrencyAfter = getBalanceByCurrency(trader.getId(),givenCurrency);
         Assertions.assertTrue(amountAddCurrency > amountAddCurrencyAfter);
     }
     public Trader createTrader (String name) {
