@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -19,12 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 class WebCurrencyServiceTest {
-    @InjectMocks
+    @Autowired
     private WebCurrencyService webCurrencyService;
-    @Mock
+    @MockBean
     private RestTemplate restTemplateMock;
-    @Mock
-    private WebCurrencyServiceConfig webCurrencyServiceConfig;
     @Value("${web.currency.service.url}")
     private String url;
     @Value("${web.currency.service.key}")
@@ -33,7 +32,7 @@ class WebCurrencyServiceTest {
     void convert() {
         Map<String, String> params = new HashMap<>();
         params.put("get", "rates");
-        params.put("pairs", "USDRUB");
+        params.put("pairs", "RUBUSD");
         params.put("key", key);
         String url = this.url + "/api/?get={get}&pairs={pairs}&key={key}";
         ConvertCurrencyResponse convertCurrencyResponse = new ConvertCurrencyResponse();
@@ -42,8 +41,6 @@ class WebCurrencyServiceTest {
         convertCurrencyResponse.setStatus(200);
         convertCurrencyResponse.setData(data);
         Mockito.when(restTemplateMock.getForObject(Mockito.eq(url), Mockito.eq(ConvertCurrencyResponse.class), Mockito.eq(params))).thenReturn(convertCurrencyResponse);
-        Mockito.when(webCurrencyServiceConfig.getKey()).thenReturn(key);
-        Mockito.when(webCurrencyServiceConfig.getUrl()).thenReturn(this.url);
         double amount = webCurrencyService.convert("RUB","USD",1);
         Assertions.assertEquals(amount,60);
     }

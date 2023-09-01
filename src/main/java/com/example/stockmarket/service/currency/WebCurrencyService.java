@@ -15,8 +15,8 @@ import java.util.Map;
 public class WebCurrencyService implements CurrencyService {
     private final RestTemplate restTemplate;
     private final WebCurrencyServiceConfig webCurrencyServiceConfig;
-    public double convert(String receivedCurrency, String givenCurrency){
-        String currencyPair = receivedCurrency + givenCurrency;
+    public double convert(String givenCurrency, String receivedCurrency){
+        String currencyPair = givenCurrency + receivedCurrency;
         Map <String, String> params = new HashMap<>();
         params.put("get", "rates");
         params.put("pairs", currencyPair);
@@ -30,7 +30,7 @@ public class WebCurrencyService implements CurrencyService {
             throw new WebCurrencyServiceException();
         }
     }
-    public double convert(String receivedCurrency, String givenCurrency, double amount) {
-        return amount * convert(receivedCurrency, givenCurrency);
+    public double convert(String givenCurrency, String receivedCurrency, double amount) {
+        return amount * convert(givenCurrency, receivedCurrency);
     }
 }
