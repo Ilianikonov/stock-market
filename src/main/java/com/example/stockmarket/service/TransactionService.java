@@ -27,10 +27,10 @@ public class TransactionService {
         }
     }
 
-    public void currencyExchange(long traderId, double receivedAmount, String givenCurrency, String receivedCurrency) {
-        double commission = receivedAmount * 0.1;
-        double givenAmount = currencyService.convert(givenCurrency, receivedCurrency, receivedAmount - commission);
-        if (balanceService.getBalanceByCurrency(traderId, receivedCurrency).getAmount() < receivedAmount) {
+    public void currencyExchange(long traderId, double givenAmount, String givenCurrency, String receivedCurrency) {
+        double commission = givenAmount * 0.1;
+        double receivedAmount = currencyService.convert(givenCurrency, receivedCurrency, givenAmount - commission);
+        if (balanceService.getBalanceByCurrency(traderId, givenCurrency).getAmount() + commission <= givenAmount) {
             throw new NotEnoughMoneyException("недостаточно средств для обмена");
         }
         databaseТransactionRepository.currencyExchange(traderId, givenCurrency, receivedCurrency, commission, givenAmount, receivedAmount);
