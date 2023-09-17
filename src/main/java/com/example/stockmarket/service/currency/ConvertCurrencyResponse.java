@@ -1,7 +1,6 @@
 package com.example.stockmarket.service.currency;
 
 import lombok.Data;
-import lombok.Value;
 
 import java.util.Map;
 

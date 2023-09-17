@@ -32,16 +32,16 @@ class WebCurrencyServiceTest {
     void convert() {
         Map<String, String> params = new HashMap<>();
         params.put("get", "rates");
-        params.put("pairs", "RUBUSD");
+        params.put("pairs", "USDRUB");
         params.put("key", key);
         String url = this.url + "/api/?get={get}&pairs={pairs}&key={key}";
         ConvertCurrencyResponse convertCurrencyResponse = new ConvertCurrencyResponse();
         Map<String, Double> data = new HashMap<>();
-        data.put("RUBUSD", 60.0);
+        data.put("USDRUB", 60.0);
         convertCurrencyResponse.setStatus(200);
         convertCurrencyResponse.setData(data);
-        Mockito.when(restTemplateMock.getForObject(Mockito.eq(url), Mockito.eq(ConvertCurrencyResponse.class), Mockito.eq(params))).thenReturn(convertCurrencyResponse);
-        double amount = webCurrencyService.convert("RUB","USD",1);
-        Assertions.assertEquals(amount,60);
+        Mockito.when(restTemplateMock.getForObject(url, ConvertCurrencyResponse.class, params)).thenReturn(convertCurrencyResponse);
+        double amount = webCurrencyService.convert("USD","RUB",1);
+        Assertions.assertEquals(60.0, amount);
     }
 }

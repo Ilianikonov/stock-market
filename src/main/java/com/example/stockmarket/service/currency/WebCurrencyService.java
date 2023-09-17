@@ -3,7 +3,6 @@ package com.example.stockmarket.service.currency;
 import com.example.stockmarket.config.WebCurrencyServiceConfig;
 import com.example.stockmarket.exception.WebCurrencyServiceException;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
