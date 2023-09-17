@@ -37,7 +37,7 @@ class WebCurrencyServiceTest {
         String url = this.url + "/api/?get={get}&pairs={pairs}&key={key}";
         ConvertCurrencyResponse convertCurrencyResponse = new ConvertCurrencyResponse();
         Map<String, Double> data = new HashMap<>();
-        data.put("USDRUB", 60.0);
+        data.put("RUBUSD", 60.0);
         convertCurrencyResponse.setStatus(200);
         convertCurrencyResponse.setData(data);
         Mockito.when(restTemplateMock.getForObject(Mockito.eq(url), Mockito.eq(ConvertCurrencyResponse.class), Mockito.eq(params))).thenReturn(convertCurrencyResponse);
