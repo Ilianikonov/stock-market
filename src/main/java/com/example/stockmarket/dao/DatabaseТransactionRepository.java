@@ -41,7 +41,7 @@ public class DatabaseТransactionRepository implements TransactionRepository {
     }
     @Override
     public List <String> getAllCurrenciesOfTrader(long traderId) {
-        return jdbcTemplate.queryForList("select distinct currency_name_given from Transaction WHERE trader_id = ? and currency_name_given is not null",String.class, traderId);
+        return jdbcTemplate.queryForList("select distinct currency_name_received from Transaction WHERE trader_id = ? and currency_name_received is not null",String.class, traderId);
     }
     @Override
     public void currencyExchange(long traderId, String givenCurrency, String receivedCurrency, double commission, double receivedAmount, double givenAmount) {
