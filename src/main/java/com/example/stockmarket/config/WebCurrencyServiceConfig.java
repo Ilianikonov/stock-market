@@ -2,10 +2,11 @@ package com.example.stockmarket.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 @Getter
-@Component
+@Configuration
 public class WebCurrencyServiceConfig {
     @Value("${web.currency.service.url}")
     private String url;
