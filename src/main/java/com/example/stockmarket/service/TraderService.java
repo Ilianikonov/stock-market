@@ -1,6 +1,5 @@
 package com.example.stockmarket.service;
 
-import com.example.stockmarket.controller.response.TraderResponse;
 import com.example.stockmarket.dao.DatabaseTraderRepository;
 import com.example.stockmarket.entity.Trader;
 import org.springframework.stereotype.Service;
