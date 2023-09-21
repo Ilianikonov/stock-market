@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 
 
 @Repository
@@ -28,7 +29,7 @@ public class DatabaseTraderRepository implements TraderRepository{
 
     @Override
     public Trader createTrader(Trader trader) {
-        String sql = "INSERT INTO trader(name,password) values (?,?)";
+        String sql = "INSERT INTO trader(name, password) values (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
@@ -39,13 +40,19 @@ public class DatabaseTraderRepository implements TraderRepository{
         if (keyHolder.getKey() == null){
             throw new RuntimeException ();
         }else {
-            return getTraderById(keyHolder.getKey().longValue());
+            long traderId = keyHolder.getKey().longValue();
+            for (int i = 0; i < trader.getRole().size(); i++){
+                String roleName = trader.getRole().get(i);
+                jdbcTemplate.update("INSERT INTO trader_to_role(trader_id,role_id) values (?,(select role.id from role where name = ?))", traderId, roleName);
+            }
+            return getTraderById(traderId);
         }
     }
 
     @Override
     public Trader updateTrader(Trader trader) {
-        jdbcTemplate.update("UPDATE trader SET name=?, password=? WHERE id = ?", trader.getName(), String.valueOf(trader.getPassword()), trader.getId());
+        jdbcTemplate.update("UPDATE trader SET name=?, password=?, enabled=? WHERE id = ?", trader.getName(), String.valueOf(trader.getPassword()), trader.getEnabled(), trader.getId());
+        jdbcTemplate.update("update trader_to_role set role_id = (select ) where trader_id = ?",trader.getId());
         return getTraderById(trader.getId());
     }
 
@@ -54,6 +61,7 @@ public class DatabaseTraderRepository implements TraderRepository{
         Trader trader = getTraderById(id);
         jdbcTemplate.update("DELETE FROM  transaction WHERE trader_id = ?  ", id);
         jdbcTemplate.update("DELETE FROM  trader WHERE id = ?  ", id);
+        jdbcTemplate.update("DELETE FROM  trader_to_role WHERE trader_id = ?  ", id);
         return trader;
     }
 
@@ -61,7 +69,8 @@ public class DatabaseTraderRepository implements TraderRepository{
     @Nullable
     public Trader getTraderById(long id) {
       try {
-          return jdbcTemplate.queryForObject("select id, name, password from trader where trader.id = ?", new TraderMapper(), id);
+          Trader trader =  jdbcTemplate.queryForObject("select id, name, password, creation_date, enabled from trader where trader.id = ?", new TraderMapper(), id);
+          trader.setRole(jdbcTemplate.queryForList("select name from role where id = (select role_id from trader_to_role where trader_id = ?)", trader.getId()));
       }catch (DataAccessException dataAccessException){
           return null;
       }
