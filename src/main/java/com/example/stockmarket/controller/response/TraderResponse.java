@@ -10,4 +10,7 @@ public class TraderResponse {
     private long id;
     private String name;
     private List <Balance> totalBalance;
+    private boolean enabled = true;
+    private List <String> role;
+
 }

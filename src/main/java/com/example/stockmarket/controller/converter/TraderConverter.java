@@ -22,12 +22,16 @@ public class TraderConverter {
         Trader trader = new Trader();
         trader.setName(traderRequest.getName());
         trader.setPassword(traderRequest.getPassword());
+        trader.setRole(traderRequest.getRole());
+        trader.setEnabled(traderRequest.isEnabled());
         return trader;
     }
     public TraderResponse convertToTrader (Trader trader){
         TraderResponse traderResponse = new TraderResponse();
         traderResponse.setId(trader.getId());
         traderResponse.setName(trader.getName());
+        traderResponse.setEnabled(trader.getEnabled());
+        traderResponse.setRole(trader.getRole());
         return traderResponse;
     }
 }

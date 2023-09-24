@@ -54,8 +54,14 @@ public class DatabaseTraderRepository implements TraderRepository{
     @Override
     @Transactional
     public Trader updateTrader(Trader trader) {
+        jdbcTemplate.update("DELETE FROM  trader_to_role WHERE trader_id = ?  ", trader.getId());
         jdbcTemplate.update("UPDATE trader SET name=?, password=?, enabled=? WHERE id = ?", trader.getName(), String.valueOf(trader.getPassword()), trader.getEnabled(), trader.getId());
-        jdbcTemplate.update("update trader_to_role set role_id = (select ) where trader_id = ?",trader.getId());
+        Integer countRoles = trader.getRole().size();
+        if (countRoles != null){
+            for (int i = 0; i <= countRoles; i++){
+                jdbcTemplate.update("update trader_to_role set role_id = (select id from role where name = ?) where trader_id = ?", trader.getRole().get(i), trader.getId());
+            }
+        }
         return getTraderById(trader.getId());
     }
 
