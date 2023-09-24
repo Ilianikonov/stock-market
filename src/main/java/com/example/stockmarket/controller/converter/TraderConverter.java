@@ -22,7 +22,7 @@ public class TraderConverter {
         Trader trader = new Trader();
         trader.setName(traderRequest.getName());
         trader.setPassword(traderRequest.getPassword());
-        trader.setRole(traderRequest.getRole());
+        trader.setRoles(traderRequest.getRoles());
         trader.setEnabled(traderRequest.isEnabled());
         return trader;
     }
@@ -31,7 +31,7 @@ public class TraderConverter {
         traderResponse.setId(trader.getId());
         traderResponse.setName(trader.getName());
         traderResponse.setEnabled(trader.getEnabled());
-        traderResponse.setRole(trader.getRole());
+        traderResponse.setRole(trader.getRoles());
         return traderResponse;
     }
 }

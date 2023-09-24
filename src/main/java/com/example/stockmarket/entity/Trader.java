@@ -2,7 +2,6 @@ package com.example.stockmarket.entity;
 
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 @Data
@@ -14,5 +13,5 @@ public class Trader {
     private Date creationDate;
     private Boolean enabled;
 
-    private List <String> role;
+    private List <String> roles;
 }

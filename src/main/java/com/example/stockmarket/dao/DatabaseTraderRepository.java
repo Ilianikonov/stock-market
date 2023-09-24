@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,9 +45,12 @@ public class DatabaseTraderRepository implements TraderRepository{
             throw new RuntimeException ();
         }
         long traderId = key.longValue();
-        for (int i = 0; i < trader.getRole().size(); i++){
-            String roleName = trader.getRole().get(i);
-            jdbcTemplate.update("INSERT INTO trader_to_role(trader_id, role_id) values (?,(select role.id from role where name = ?))", traderId, roleName);
+        List<String> roles = trader.getRoles();
+        if (roles != null) {
+            for (int i = 0; i < roles.size(); i++) {
+                String roleName = roles.get(i);
+                jdbcTemplate.update("INSERT INTO trader_to_role(trader_id, role_id) values (?,(select role.id from role where name = ?))", traderId, roleName);
+            }
         }
         return getTraderById(traderId);
     }
@@ -56,12 +60,16 @@ public class DatabaseTraderRepository implements TraderRepository{
     public Trader updateTrader(Trader trader) {
         jdbcTemplate.update("DELETE FROM  trader_to_role WHERE trader_id = ?  ", trader.getId());
         jdbcTemplate.update("UPDATE trader SET name=?, password=?, enabled=? WHERE id = ?", trader.getName(), String.valueOf(trader.getPassword()), trader.getEnabled(), trader.getId());
-        Integer countRoles = trader.getRole().size();
-        if (countRoles != null){
-            for (int i = 0; i <= countRoles; i++){
-                jdbcTemplate.update("update trader_to_role set role_id = (select id from role where name = ?) where trader_id = ?", trader.getRole().get(i), trader.getId());
+        List<String> roles = trader.getRoles();
+        String sql = "INSERT INTO trader_to_role (role_id, trader_id) values ((select id from role where name = ?), ?)";
+        List<Object[]> values = new ArrayList<>();
+        if (roles != null){
+            for (int i = 0; i < roles.size(); i++){
+                Object[] traderToRole = {roles.get(i), trader.getId()};
+                values.add(traderToRole);
             }
         }
+        jdbcTemplate.batchUpdate(sql,values);
         return getTraderById(trader.getId());
     }
 
@@ -81,7 +89,7 @@ public class DatabaseTraderRepository implements TraderRepository{
         Trader trader;
         try {
             trader =  jdbcTemplate.queryForObject("select id, name, password, creation_date, enabled from trader where trader.id = ?", new TraderMapper(), id);
-            trader.setRole(jdbcTemplate.queryForList("select role.name from trader_to_role join role on role_id = role.id where trader_id = ?", String.class, id));
+            trader.setRoles(jdbcTemplate.queryForList("select role.name from trader_to_role join role on role_id = role.id where trader_id = ?", String.class, id));
         } catch (DataAccessException dataAccessException){
             return null;
         }
