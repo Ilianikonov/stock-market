@@ -20,8 +20,8 @@ public class TraderController {
 
     @PostMapping("/createTrader")
     public TraderResponse createTrader(@RequestBody CreateTraderRequest createTraderRequest){
-        traderConverter.convertToTrader(createTraderRequest);
-        return traderConverter.convertToTrader(traderService.createTrader(traderConverter.convertToTrader(createTraderRequest)));
+        Trader trader = traderService.createTrader(traderConverter.convertToTrader(createTraderRequest));
+        return traderConverter.convertToTrader(trader);
     }
 
     @PostMapping("/updateTrader")
