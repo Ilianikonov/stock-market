@@ -1,6 +1,5 @@
 package com.example.stockmarket.controller.request;
 
-import com.example.stockmarket.entity.Balance;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -12,4 +11,6 @@ public abstract class TraderRequest {
     @Size(min = 6)
     @Size(max = 100)
     private char[] password;
+    private boolean enabled = true;
+    private List <String> roles;
 }

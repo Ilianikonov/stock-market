@@ -14,6 +14,8 @@ public class TraderMapper implements RowMapper<Trader> {
         trader.setId(resultSet.getLong("id"));
         trader.setName(resultSet.getString("name"));
         trader.setPassword(resultSet.getString("password").toCharArray());
+        trader.setCreationDate(resultSet.getDate("creation_date"));
+        trader.setEnabled(resultSet.getBoolean("enabled"));
         return trader;
     }
 }

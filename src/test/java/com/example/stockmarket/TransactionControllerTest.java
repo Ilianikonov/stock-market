@@ -115,7 +115,6 @@ public class TransactionControllerTest {
                         .param("currency", "USD"))
                 .andExpect(status().isOk());
         double amountReduceCurrency = getBalanceByCurrency(trader.getId(), givenCurrency);
-        System.out.println(amountReduceCurrency);
         mockMvc.perform(post(EXCHANGE_CURRENCY_URL)
                         .param("traderId", String.valueOf(trader.getId()))
                         .param("count", String.valueOf(count))

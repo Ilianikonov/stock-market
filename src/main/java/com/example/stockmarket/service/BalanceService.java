@@ -6,6 +6,7 @@ import com.example.stockmarket.service.currency.CurrencyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public class BalanceService {
     private final DatabaseТransactionRepository databaseТransactionRepository;
     private final CurrencyService currencyService;
 
-    public Balance getTotalBalance(long traderId, String currency) {
+    public Balance getTotalBalanceByCurrency(long traderId, String currency) {
         Balance balanceTotal = new Balance();
         double amount = 0.0;
         balanceTotal.setCurrencyName(currency);
@@ -29,6 +30,14 @@ public class BalanceService {
         }
         balanceTotal.setAmount(amount);
         return balanceTotal;
+    }
+    public List<Balance> getTotalBalance(long traderId) {
+        List<Balance> balancesTotal = new ArrayList<>();
+        List<String> balanceCurrency = databaseТransactionRepository.getAllCurrenciesOfTrader(traderId);
+        for (String name: balanceCurrency){
+            balancesTotal.add(getBalanceByCurrency(traderId,name));
+        }
+        return balancesTotal;
     }
 
     public Balance getBalanceByCurrency(long traderId, String currency) {

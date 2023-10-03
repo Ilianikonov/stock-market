@@ -35,6 +35,7 @@ public class BalanceControllerTest {
     private static final String GET_CURRENCY_URL = "/balance/getBalanceByCurrency";
     private static final String MAKE_DEPOSITING_URL = "/transaction/makeDepositing";
     private static final String WITHDRAW_CURRENCY_URL = "/transaction/withdrawCurrency";
+    private static final String GET_TOTAL_BALANCE_BY_CURRENCY_URL = "/balance/getTotalBalanceByCurreny";
     private static final String GET_TOTAL_BALANCE_URL = "/balance/getTotalBalance";
 
 
@@ -49,7 +50,7 @@ public class BalanceControllerTest {
     }
 
     @Test
-    public void getTotalBalance() throws Exception{ // todo: дописать тест
+    public void getTotalBalanceByCurreny() throws Exception{ // todo: дописать тест
         String currency = "RUB";
         Trader trader = createTrader("aefsweveqq");
         double count = 1244.12;
@@ -68,11 +69,29 @@ public class BalanceControllerTest {
                         .param("amount", String.valueOf(31))
                         .param("currency", currency))
                 .andExpect(status().isOk());
-        mockMvc.perform(get(GET_TOTAL_BALANCE_URL)
+        mockMvc.perform(get(GET_TOTAL_BALANCE_BY_CURRENCY_URL)
                         .param("traderId", String.valueOf(trader.getId()))
                         .param("currency", currency))
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.amount").isNumber());
+    }
+    @Test
+    public void getTotalBalance() throws Exception {
+        Trader trader = createTrader("fawf");
+        mockMvc.perform(post(MAKE_DEPOSITING_URL)
+                        .param("traderId", String.valueOf(trader.getId()))
+                        .param("amount", String.valueOf(124400))
+                        .param("currency", "USD"))
+                .andExpect(status().isOk());
+        mockMvc.perform(post(MAKE_DEPOSITING_URL)
+                        .param("traderId", String.valueOf(trader.getId()))
+                        .param("amount", String.valueOf(31))
+                        .param("currency","RUB"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get(GET_TOTAL_BALANCE_URL)
+                        .param("traderId", String.valueOf(trader.getId())))
+                .andExpect(status().isOk());
+        Assertions.assertTrue(traderService.getTraderById(trader.getId()).getTotalBalance().size() == 2);
     }
     @Test
     public void getBalanceByCurrency() throws Exception{

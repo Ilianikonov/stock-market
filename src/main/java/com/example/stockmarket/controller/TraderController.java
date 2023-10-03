@@ -3,14 +3,11 @@ package com.example.stockmarket.controller;
 import com.example.stockmarket.controller.converter.TraderConverter;
 import com.example.stockmarket.controller.request.CreateTraderRequest;
 import com.example.stockmarket.controller.request.UpdateTraderRequest;
-import com.example.stockmarket.controller.response.ErrorResponse;
 import com.example.stockmarket.controller.response.TraderResponse;
 import com.example.stockmarket.entity.Trader;
-import com.example.stockmarket.exception.ObjectNotFoundException;
 import com.example.stockmarket.service.TraderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +20,8 @@ public class TraderController {
 
     @PostMapping("/createTrader")
     public TraderResponse createTrader(@RequestBody CreateTraderRequest createTraderRequest){
-        traderConverter.convertToTrader(createTraderRequest);
-        return traderConverter.convertToTrader(traderService.createTrader(traderConverter.convertToTrader(createTraderRequest)));
+        Trader trader = traderService.createTrader(traderConverter.convertToTrader(createTraderRequest));
+        return traderConverter.convertToTrader(trader);
     }
 
     @PostMapping("/updateTrader")
