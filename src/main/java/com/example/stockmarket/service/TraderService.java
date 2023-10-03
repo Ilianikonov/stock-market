@@ -2,14 +2,17 @@ package com.example.stockmarket.service;
 
 import com.example.stockmarket.dao.DatabaseTraderRepository;
 import com.example.stockmarket.entity.Trader;
+import com.example.stockmarket.exception.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TraderService {
     private final DatabaseTraderRepository databaseTraderRepository;
+    private final BalanceService balanceService;
 
-    public TraderService(DatabaseTraderRepository databaseTraderRepository) {
+    public TraderService(DatabaseTraderRepository databaseTraderRepository, BalanceService balanceService) {
         this.databaseTraderRepository = databaseTraderRepository;
+        this.balanceService = balanceService;
     }
 
     public void clear() {
@@ -23,7 +26,9 @@ public class TraderService {
 
 
     public Trader updateTrader(Trader trader) {
-        return databaseTraderRepository.updateTrader(trader);
+        Trader trader1 = databaseTraderRepository.updateTrader(trader);
+        trader1.setTotalBalance(balanceService.getTotalBalance(trader1.getId()));
+        return trader1;
     }
 
 
@@ -33,6 +38,11 @@ public class TraderService {
 
 
     public Trader getTraderById(long id) {
-        return databaseTraderRepository.getTraderById(id);
+        Trader trader = databaseTraderRepository.getTraderById(id);
+        if (trader == null){
+            throw new ObjectNotFoundException("не найден трейдер");
+        }
+        trader.setTotalBalance(balanceService.getTotalBalance(trader.getId()));
+        return trader;
     }
 }

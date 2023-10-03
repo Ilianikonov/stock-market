@@ -1,10 +1,3 @@
-drop table if exists transaction;
-drop table if exists trader;
-drop table if exists trader_to_role;
-drop table if exists role;
-drop table if exists transaction_type;
-
-
 create table trader
 (
     id       serial primary key,

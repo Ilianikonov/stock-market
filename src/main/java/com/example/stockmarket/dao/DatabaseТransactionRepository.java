@@ -1,5 +1,6 @@
 package com.example.stockmarket.dao;
 
+import com.example.stockmarket.entity.Balance;
 import com.example.stockmarket.exception.ObjectNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -41,7 +42,11 @@ public class DatabaseТransactionRepository implements TransactionRepository {
     }
     @Override
     public List <String> getAllCurrenciesOfTrader(long traderId) {
-        return jdbcTemplate.queryForList("select distinct currency_name_received from Transaction WHERE trader_id = ? and currency_name_received is not null",String.class, traderId);
+        List<String> listCurrencyByID = jdbcTemplate.queryForList("select distinct currency_name_received from Transaction WHERE trader_id = ? and currency_name_received is not null",String.class, traderId);
+        if (listCurrencyByID == null){
+            throw new ObjectNotFoundException("не найдена валюта или трейдер");
+        }
+        return listCurrencyByID;
     }
     @Override
     public void currencyExchange(long traderId, String givenCurrency, String receivedCurrency, double commission, double receivedAmount, double givenAmount) {

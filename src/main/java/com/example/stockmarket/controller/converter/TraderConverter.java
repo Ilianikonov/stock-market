@@ -32,6 +32,8 @@ public class TraderConverter {
         traderResponse.setName(trader.getName());
         traderResponse.setEnabled(trader.getEnabled());
         traderResponse.setRole(trader.getRoles());
+        traderResponse.setTotalBalance(trader.getTotalBalance());
+        traderResponse.setCreationDate(trader.getCreationDate());
         return traderResponse;
     }
 }

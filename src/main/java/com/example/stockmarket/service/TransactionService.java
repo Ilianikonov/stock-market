@@ -19,6 +19,9 @@ public class TransactionService {
     }
 
     public void withdrawCurrency(long traderId, double givenAmount, String givenCurrency) {
+        if (givenAmount <= 0){
+            throw new NotEnoughMoneyException("недопустимая сумма для вывода(вывод не должен быть меньше либо равный 0)");
+        }
         double commission = 0;
         if ((databaseТransactionRepository.getAmountOfAdditions(traderId, givenCurrency) - databaseТransactionRepository.getAmountOfSubtractions(traderId, givenCurrency)) >= givenAmount) {
             databaseТransactionRepository.withdrawCurrency(traderId, givenAmount, givenCurrency, commission);

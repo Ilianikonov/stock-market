@@ -12,6 +12,7 @@ public class Trader {
 
     private Date creationDate;
     private Boolean enabled;
+    private  List <Balance> totalBalance;
 
     private List <String> roles;
 }
