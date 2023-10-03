@@ -11,7 +11,7 @@ public class TraderResponse {
     private long id;
     private String name;
     private List <Balance> totalBalance;
-    private boolean enabled = true;
+    private boolean enabled;
     private List <String> role;
     private Date creationDate;
 
