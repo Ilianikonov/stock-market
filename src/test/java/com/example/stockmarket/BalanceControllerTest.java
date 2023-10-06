@@ -1,5 +1,7 @@
 package com.example.stockmarket;
 
+import com.example.stockmarket.controller.request.transactionRequest.MakeDepositingRequest;
+import com.example.stockmarket.controller.request.transactionRequest.WithdrawCurrencyRequest;
 import com.example.stockmarket.controller.response.GetBalanceResponse;
 import com.example.stockmarket.entity.Trader;
 import com.example.stockmarket.service.TraderService;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -54,20 +57,26 @@ public class BalanceControllerTest {
         String currency = "RUB";
         Trader trader = createTrader("aefsweveqq");
         double count = 1244.12;
+        MakeDepositingRequest makeDepositingRequest = new MakeDepositingRequest();
+        makeDepositingRequest.setTraderId(trader.getId());
+        makeDepositingRequest.setReceivedCurrency(currency);
+        makeDepositingRequest.setReceivedAmount(124400);
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(124400))
-                        .param("currency", currency))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(makeDepositingRequest)))
                 .andExpect(status().isOk());
+        WithdrawCurrencyRequest withdrawCurrencyRequest = new WithdrawCurrencyRequest();
+        withdrawCurrencyRequest.setTraderId(trader.getId());
+        withdrawCurrencyRequest.setGivenCurrency(currency);
+        withdrawCurrencyRequest.setGivenAmount(1000);
         mockMvc.perform(post(WITHDRAW_CURRENCY_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(1000))
-                        .param("currency", currency))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(withdrawCurrencyRequest)))
                 .andExpect(status().isOk());
+        makeDepositingRequest.setReceivedAmount(31);
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(31))
-                        .param("currency", currency))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(makeDepositingRequest)))
                 .andExpect(status().isOk());
         mockMvc.perform(get(GET_TOTAL_BALANCE_BY_CURRENCY_URL)
                         .param("traderId", String.valueOf(trader.getId()))
@@ -78,15 +87,18 @@ public class BalanceControllerTest {
     @Test
     public void getTotalBalance() throws Exception {
         Trader trader = createTrader("fawf");
+        MakeDepositingRequest makeDepositingRequest = new MakeDepositingRequest();
+        makeDepositingRequest.setTraderId(trader.getId());
+        makeDepositingRequest.setReceivedCurrency("USD");
+        makeDepositingRequest.setReceivedAmount(124400);
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(124400))
-                        .param("currency", "USD"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(makeDepositingRequest)))
                 .andExpect(status().isOk());
+        makeDepositingRequest.setReceivedCurrency("RUB");
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(31))
-                        .param("currency","RUB"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(makeDepositingRequest)))
                 .andExpect(status().isOk());
         mockMvc.perform(get(GET_TOTAL_BALANCE_URL)
                         .param("traderId", String.valueOf(trader.getId())))
@@ -98,10 +110,13 @@ public class BalanceControllerTest {
         Trader trader = createTrader("aefsweeqq");
         double amount = 10.4;
         String currency = "RUB";
+        MakeDepositingRequest makeDepositingRequest = new MakeDepositingRequest();
+        makeDepositingRequest.setTraderId(trader.getId());
+        makeDepositingRequest.setReceivedCurrency(currency);
+        makeDepositingRequest.setReceivedAmount(amount);
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(amount))
-                        .param("currency", currency))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(makeDepositingRequest)))
                 .andExpect(status().isOk());
         double amountCurrency = getBalanceByCurrency(trader.getId(),currency);
         Assertions.assertTrue(amountCurrency >= 0.0);

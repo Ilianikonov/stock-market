@@ -1,9 +1,7 @@
 package com.example.stockmarket.controller.converter;
 
-import com.example.stockmarket.controller.request.TraderRequest;
 import com.example.stockmarket.controller.response.GetBalanceResponse;
 import com.example.stockmarket.entity.Balance;
-import com.example.stockmarket.entity.Trader;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

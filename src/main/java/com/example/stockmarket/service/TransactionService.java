@@ -1,6 +1,8 @@
 package com.example.stockmarket.service;
 
 import com.example.stockmarket.dao.DatabaseТransactionRepository;
+import com.example.stockmarket.entity.Transaction;
+import com.example.stockmarket.entity.TransactionType;
 import com.example.stockmarket.exception.NotEnoughMoneyException;
 import com.example.stockmarket.service.currency.CurrencyService;
 import lombok.RequiredArgsConstructor;
@@ -14,28 +16,46 @@ public class TransactionService {
     private final BalanceService balanceService;
 
     public void makeDepositing(long traderId, double receivedAmount, String receivedCurrency) {
-        double commission = 0;
-        databaseТransactionRepository.makeDepositing(traderId, receivedAmount, receivedCurrency, commission);
+        Transaction transaction = new Transaction();
+        transaction.setTraderTd(traderId);
+        transaction.setReceivedAmount(receivedAmount);
+        transaction.setReceivedCurrency(receivedCurrency);
+        transaction.setCommission(0);
+        transaction.setType(TransactionType.DEPOSITING);
+        databaseТransactionRepository.save(transaction);
     }
 
     public void withdrawCurrency(long traderId, double givenAmount, String givenCurrency) {
         if (givenAmount <= 0){
             throw new NotEnoughMoneyException("недопустимая сумма для вывода(вывод не должен быть меньше либо равный 0)");
         }
-        double commission = 0;
-        if ((databaseТransactionRepository.getAmountOfAdditions(traderId, givenCurrency) - databaseТransactionRepository.getAmountOfSubtractions(traderId, givenCurrency)) >= givenAmount) {
-            databaseТransactionRepository.withdrawCurrency(traderId, givenAmount, givenCurrency, commission);
+        Transaction transaction = new Transaction();
+        transaction.setTraderTd(traderId);
+        transaction.setCommission(0);
+        transaction.setGivenAmount(givenAmount);
+        transaction.setGivenCurrency(givenCurrency);
+        transaction.setType(TransactionType.WITHDRAWAL);
+        if ((databaseТransactionRepository.getAmountOfAdditions(transaction.getTraderTd(), transaction.getGivenCurrency()) - databaseТransactionRepository.getAmountOfSubtractions(transaction.getTraderTd(), transaction.getGivenCurrency())) >= givenAmount) {
+            databaseТransactionRepository.save(transaction);
         } else {
             throw new NotEnoughMoneyException("недостаточно средств для вывода");
         }
     }
 
     public void currencyExchange(long traderId, double givenAmount, String givenCurrency, String receivedCurrency) {
-        double commission = givenAmount * 0.1;
-        double receivedAmount = currencyService.convert(givenCurrency, receivedCurrency, givenAmount - commission);
-        if (balanceService.getBalanceByCurrency(traderId, givenCurrency).getAmount() + commission <= givenAmount) {
+        Transaction transaction = new Transaction();
+        transaction.setTraderTd(traderId);
+        transaction.setGivenCurrency(givenCurrency);
+        transaction.setGivenAmount(givenAmount);
+        transaction.setReceivedCurrency(receivedCurrency);
+        transaction.setCommission(givenAmount * 0.1);
+        transaction.setType(TransactionType.EXCHANGE);
+        if (balanceService.getBalanceByCurrency(traderId, givenCurrency).getAmount() + transaction.getCommission() <= givenAmount) {
             throw new NotEnoughMoneyException("недостаточно средств для обмена");
         }
-        databaseТransactionRepository.currencyExchange(traderId, givenCurrency, receivedCurrency, commission, receivedAmount, givenAmount);
+        double receivedAmount = currencyService.convert(givenCurrency, receivedCurrency, givenAmount - transaction.getCommission());
+        transaction.setReceivedAmount(receivedAmount);
+
+        databaseТransactionRepository.save(transaction);
     }
 }

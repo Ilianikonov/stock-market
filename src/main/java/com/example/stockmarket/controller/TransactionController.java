@@ -1,6 +1,10 @@
 package com.example.stockmarket.controller;
 
+import com.example.stockmarket.controller.request.transactionRequest.CurrencyExchangeRequest;
+import com.example.stockmarket.controller.request.transactionRequest.MakeDepositingRequest;
+import com.example.stockmarket.controller.request.transactionRequest.WithdrawCurrencyRequest;
 import com.example.stockmarket.controller.response.ErrorResponse;
+import com.example.stockmarket.entity.Transaction;
 import com.example.stockmarket.exception.NotEnoughMoneyException;
 import com.example.stockmarket.exception.ObjectNotFoundException;
 import com.example.stockmarket.service.TransactionService;
@@ -18,24 +22,17 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping("/makeDepositing")
-    public void makeDepositing(@RequestParam long traderId,
-                               @RequestParam double amount,
-                               @RequestParam String currency){
-        transactionService.makeDepositing(traderId, amount, currency);
+    public void makeDepositing(@RequestBody MakeDepositingRequest makeDepositingRequest){
+        transactionService.makeDepositing(makeDepositingRequest.getTraderId(), makeDepositingRequest.getReceivedAmount(), makeDepositingRequest.getReceivedCurrency());
     }
 
     @PostMapping("/withdrawCurrency")
-    public void withdrawCurrency(@RequestParam long traderId,
-                                 @RequestParam double amount,
-                                 @RequestParam String currency){
-        transactionService.withdrawCurrency(traderId, amount, currency);
+    public void withdrawCurrency(@RequestBody WithdrawCurrencyRequest withdrawCurrencyRequest){
+        transactionService.withdrawCurrency(withdrawCurrencyRequest.getTraderId(), withdrawCurrencyRequest.getGivenAmount(), withdrawCurrencyRequest.getGivenCurrency());
     }
 
     @PostMapping("/currencyExchange")
-    public void currencyExchange(@RequestParam long traderId,
-                                 @RequestParam double count,
-                                 @RequestParam String givenCurrency,
-                                 @RequestParam String receivedCurrency) {
-        transactionService.currencyExchange(traderId, count, givenCurrency, receivedCurrency);
+    public void currencyExchange(@RequestBody CurrencyExchangeRequest currencyExchangeRequest) {
+        transactionService.currencyExchange(currencyExchangeRequest.getTraderId(), currencyExchangeRequest.getGivenAmount(), currencyExchangeRequest.getGivenCurrency(), currencyExchangeRequest.getReceivedCurrency());
     }
 }
