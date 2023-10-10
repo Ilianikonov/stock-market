@@ -1,8 +1,8 @@
 package com.example.stockmarket.controller;
 
 import com.example.stockmarket.controller.converter.TraderConverter;
-import com.example.stockmarket.controller.request.CreateTraderRequest;
-import com.example.stockmarket.controller.request.UpdateTraderRequest;
+import com.example.stockmarket.controller.request.traderRequest.CreateTraderRequest;
+import com.example.stockmarket.controller.request.traderRequest.UpdateTraderRequest;
 import com.example.stockmarket.controller.response.TraderResponse;
 import com.example.stockmarket.entity.Trader;
 import com.example.stockmarket.service.TraderService;

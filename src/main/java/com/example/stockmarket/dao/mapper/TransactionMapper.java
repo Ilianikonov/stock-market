@@ -14,12 +14,12 @@ public class TransactionMapper implements RowMapper<Transaction> {
     public Transaction mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return new Transaction()
                 .setId( resultSet.getLong("id"))
-                .setAmountTo(resultSet.getDouble("amount_to"))
-                .setAmountFrom(resultSet.getDouble("amount_from"))
+                .setReceivedAmount(resultSet.getDouble("amount_to"))
+                .setGivenAmount(resultSet.getDouble("amount_from"))
                 .setCommission(resultSet.getDouble("commission"))
-                .setCurrencyNameTo(resultSet.getString("currency_name_to"))
-                .setCurrencyNameFrom(resultSet.getString("currency_name_from"))
-                .setTrader(traderMapper.mapRow(resultSet, rowNum))
+                .setReceivedCurrency(resultSet.getString("currency_name_to"))
+                .setGivenCurrency(resultSet.getString("currency_name_from"))
+                .setTraderTd(resultSet.getLong("trader_id"))
                 .setType(TransactionType.valueOf(resultSet.getString("transaction_type.name")));
     }
 }
