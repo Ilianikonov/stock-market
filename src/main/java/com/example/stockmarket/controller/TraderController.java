@@ -1,47 +1,24 @@
 package com.example.stockmarket.controller;
 
-import com.example.stockmarket.controller.converter.TraderConverter;
 import com.example.stockmarket.controller.request.CreateTraderRequest;
 import com.example.stockmarket.controller.request.UpdateTraderRequest;
 import com.example.stockmarket.controller.response.TraderResponse;
-import com.example.stockmarket.entity.Trader;
-import com.example.stockmarket.service.TraderService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
-@RestController
 @RequestMapping("/trader")
-public class TraderController {
-    private  final TraderService traderService;
-    private final TraderConverter traderConverter;
-
+public interface TraderController {
+    @Operation(summary = "создание trader")
     @PostMapping("/createTrader")
-    public TraderResponse createTrader(@RequestBody CreateTraderRequest createTraderRequest){
-        Trader trader = traderService.createTrader(traderConverter.convertToTrader(createTraderRequest));
-        return traderConverter.convertToTrader(trader);
-    }
+    TraderResponse createTrader(@RequestBody CreateTraderRequest createTraderRequest);
 
     @PostMapping("/updateTrader")
-    public TraderResponse updateTrader (@RequestBody UpdateTraderRequest updateTraderRequest) {
-        Trader trader = traderService.updateTrader(traderConverter.convertToTrader(updateTraderRequest));
-        return traderConverter.convertToTrader(trader);
-    }
+    TraderResponse updateTrader (@RequestBody UpdateTraderRequest updateTraderRequest);
 
     @DeleteMapping("/deleteTraderById/{id}")
-    public TraderResponse deleteTraderById (@PathVariable Long id){
-        Trader trader = traderService.deleteTraderById(id);
-        return traderConverter.convertToTrader(trader);
-    }
+    TraderResponse deleteTraderById (@PathVariable Long id);
 
     @GetMapping("/getTraderById/{id}")
-    public ResponseEntity<TraderResponse> getTraderById(@PathVariable Long id) {
-        Trader trader = traderService.getTraderById(id);
-        if (trader == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(traderConverter.convertToTrader(trader));
-    }
+    ResponseEntity<TraderResponse> getTraderById(@PathVariable Long id);
 }
