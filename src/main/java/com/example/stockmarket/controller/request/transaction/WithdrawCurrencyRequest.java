@@ -1,4 +1,4 @@
-package com.example.stockmarket.controller.request.transactionRequest;
+package com.example.stockmarket.controller.request.transaction;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

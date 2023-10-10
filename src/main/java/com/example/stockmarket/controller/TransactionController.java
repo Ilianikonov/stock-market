@@ -1,18 +1,14 @@
 package com.example.stockmarket.controller;
 
-import com.example.stockmarket.controller.request.transactionRequest.CurrencyExchangeRequest;
-import com.example.stockmarket.controller.request.transactionRequest.MakeDepositingRequest;
-import com.example.stockmarket.controller.request.transactionRequest.WithdrawCurrencyRequest;
-import com.example.stockmarket.controller.response.ErrorResponse;
-import com.example.stockmarket.entity.Transaction;
-import com.example.stockmarket.exception.NotEnoughMoneyException;
-import com.example.stockmarket.exception.ObjectNotFoundException;
+import com.example.stockmarket.controller.request.transaction.CurrencyExchangeRequest;
+import com.example.stockmarket.controller.request.transaction.MakeDepositingRequest;
+import com.example.stockmarket.controller.request.transaction.WithdrawCurrencyRequest;
 import com.example.stockmarket.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController

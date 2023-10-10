@@ -1,7 +1,7 @@
 package com.example.stockmarket.controller;
 
-import com.example.stockmarket.controller.request.CreateTraderRequest;
-import com.example.stockmarket.controller.request.UpdateTraderRequest;
+import com.example.stockmarket.controller.request.trader.CreateTraderRequest;
+import com.example.stockmarket.controller.request.trader.UpdateTraderRequest;
 import com.example.stockmarket.controller.response.TraderResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;

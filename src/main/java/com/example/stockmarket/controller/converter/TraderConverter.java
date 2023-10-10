@@ -1,8 +1,8 @@
 package com.example.stockmarket.controller.converter;
 
-import com.example.stockmarket.controller.request.traderRequest.CreateTraderRequest;
-import com.example.stockmarket.controller.request.traderRequest.TraderRequest;
-import com.example.stockmarket.controller.request.traderRequest.UpdateTraderRequest;
+import com.example.stockmarket.controller.request.trader.CreateTraderRequest;
+import com.example.stockmarket.controller.request.trader.TraderRequest;
+import com.example.stockmarket.controller.request.trader.UpdateTraderRequest;
 import com.example.stockmarket.controller.response.TraderResponse;
 import com.example.stockmarket.entity.Trader;
 import org.springframework.stereotype.Component;

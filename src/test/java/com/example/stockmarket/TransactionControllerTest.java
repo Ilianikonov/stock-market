@@ -1,9 +1,8 @@
 package com.example.stockmarket;
 
-import com.example.stockmarket.controller.request.traderRequest.UpdateTraderRequest;
-import com.example.stockmarket.controller.request.transactionRequest.CurrencyExchangeRequest;
-import com.example.stockmarket.controller.request.transactionRequest.MakeDepositingRequest;
-import com.example.stockmarket.controller.request.transactionRequest.WithdrawCurrencyRequest;
+import com.example.stockmarket.controller.request.transaction.CurrencyExchangeRequest;
+import com.example.stockmarket.controller.request.transaction.MakeDepositingRequest;
+import com.example.stockmarket.controller.request.transaction.WithdrawCurrencyRequest;
 import com.example.stockmarket.controller.response.GetBalanceResponse;
 import com.example.stockmarket.entity.Trader;
 import com.example.stockmarket.service.TraderService;
