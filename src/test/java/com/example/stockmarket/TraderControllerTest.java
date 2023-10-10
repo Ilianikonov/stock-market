@@ -1,22 +1,17 @@
 package com.example.stockmarket;
 
-import com.example.stockmarket.controller.request.CreateTraderRequest;
-import com.example.stockmarket.controller.request.UpdateTraderRequest;
+import com.example.stockmarket.controller.request.traderRequest.CreateTraderRequest;
+import com.example.stockmarket.controller.request.traderRequest.UpdateTraderRequest;
 import com.example.stockmarket.controller.response.TraderResponse;
 import com.example.stockmarket.entity.Trader;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

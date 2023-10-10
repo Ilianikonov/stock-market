@@ -1,5 +1,9 @@
 package com.example.stockmarket;
 
+import com.example.stockmarket.controller.request.traderRequest.UpdateTraderRequest;
+import com.example.stockmarket.controller.request.transactionRequest.CurrencyExchangeRequest;
+import com.example.stockmarket.controller.request.transactionRequest.MakeDepositingRequest;
+import com.example.stockmarket.controller.request.transactionRequest.WithdrawCurrencyRequest;
 import com.example.stockmarket.controller.response.GetBalanceResponse;
 import com.example.stockmarket.entity.Trader;
 import com.example.stockmarket.service.TraderService;
@@ -15,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 
@@ -59,16 +64,18 @@ public class TransactionControllerTest {
         Trader trader = createTrader("awefweeqq");
         double amount = 14.5;
         String currency = "RUB";
+        MakeDepositingRequest makeDepositingRequest = new MakeDepositingRequest();
+        makeDepositingRequest.setTraderId(trader.getId());
+        makeDepositingRequest.setReceivedCurrency(currency);
+        makeDepositingRequest.setReceivedAmount(amount);
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(amount))
-                        .param("currency", currency))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(makeDepositingRequest)))
                 .andExpect(status().isOk());
         double amountBefore = getBalanceByCurrency(trader.getId(),currency);
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(amount))
-                        .param("currency", currency))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(makeDepositingRequest)))
                 .andExpect(status().isOk());
         double amountAfter = getBalanceByCurrency(trader.getId(),currency);
         Assertions.assertEquals(amountBefore + amount,amountAfter);
@@ -78,16 +85,26 @@ public class TransactionControllerTest {
         Trader trader = createTrader("wefweqq");
         double amount = 14.5;
         String currency = "RUB";
+        MakeDepositingRequest makeDepositingRequest = new MakeDepositingRequest();
+        makeDepositingRequest.setTraderId(trader.getId());
+        makeDepositingRequest.setReceivedCurrency(currency);
+        makeDepositingRequest.setReceivedAmount(100000);
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(amount))
-                        .param("currency", currency))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(makeDepositingRequest)))
+                .andExpect(status().isOk());
+        WithdrawCurrencyRequest withdrawCurrencyRequest = new WithdrawCurrencyRequest();
+        withdrawCurrencyRequest.setTraderId(trader.getId());
+        withdrawCurrencyRequest.setGivenCurrency(currency);
+        withdrawCurrencyRequest.setGivenAmount(amount);
+        mockMvc.perform(post(WITHDRAW_CURRENCY_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(withdrawCurrencyRequest)))
                 .andExpect(status().isOk());
         double amountBefore = getBalanceByCurrency(trader.getId(),currency);
         mockMvc.perform(post(WITHDRAW_CURRENCY_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(amount))
-                        .param("currency", currency))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(withdrawCurrencyRequest)))
                 .andExpect(status().isOk());
         double amountAfter = getBalanceByCurrency(trader.getId(),currency);
         Assertions.assertEquals(amountBefore - amount,amountAfter);
@@ -97,10 +114,13 @@ public class TransactionControllerTest {
         Trader trader = createTrader("aqeqfqq");
         double amount = 14.5;
         String currency = "FEG";
+        WithdrawCurrencyRequest withdrawCurrencyRequest = new WithdrawCurrencyRequest();
+        withdrawCurrencyRequest.setTraderId(trader.getId());
+        withdrawCurrencyRequest.setGivenCurrency(currency);
+        withdrawCurrencyRequest.setGivenAmount(amount);
         mockMvc.perform(post(WITHDRAW_CURRENCY_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(amount))
-                        .param("currency", currency))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(withdrawCurrencyRequest)))
                 .andExpect(status().isNotFound());
     }
     @Test
@@ -109,17 +129,25 @@ public class TransactionControllerTest {
         String givenCurrency = "USD";
         String receivedCurrency = "RUB";
         double count = 124.12;
+        CurrencyExchangeRequest currencyExchangeRequest = new CurrencyExchangeRequest();
+        currencyExchangeRequest.setTraderId(trader.getId());
+        currencyExchangeRequest.setReceivedCurrency(receivedCurrency);
+        currencyExchangeRequest.setGivenCurrency(givenCurrency);
+        currencyExchangeRequest.setGivenAmount(count);
+
+        MakeDepositingRequest makeDepositingRequest = new MakeDepositingRequest();
+        makeDepositingRequest.setTraderId(trader.getId());
+        makeDepositingRequest.setReceivedCurrency("USD");
+        makeDepositingRequest.setReceivedAmount(121333);
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(121333))
-                        .param("currency", "USD"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(makeDepositingRequest)))
                 .andExpect(status().isOk());
         double amountReduceCurrency = getBalanceByCurrency(trader.getId(), givenCurrency);
+
         mockMvc.perform(post(EXCHANGE_CURRENCY_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("count", String.valueOf(count))
-                        .param("givenCurrency", givenCurrency)
-                        .param("receivedCurrency", receivedCurrency))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(currencyExchangeRequest)))
                 .andExpect(status().isOk());
         double amountReduceCurrencyAfter = getBalanceByCurrency(trader.getId(),givenCurrency);
         Assertions.assertTrue(amountReduceCurrency > amountReduceCurrencyAfter);
@@ -129,18 +157,25 @@ public class TransactionControllerTest {
         Trader trader = createTrader("awewveqq");
         String givenCurrency = "USD";
         String receivedCurrency = "RUB";
-        double count = 1241.12;
+        double count = 1300;
+        CurrencyExchangeRequest currencyExchangeRequest = new CurrencyExchangeRequest();
+        currencyExchangeRequest.setTraderId(trader.getId());
+        currencyExchangeRequest.setReceivedCurrency(receivedCurrency);
+        currencyExchangeRequest.setGivenCurrency(givenCurrency);
+        currencyExchangeRequest.setGivenAmount(count);
+
+        MakeDepositingRequest makeDepositingRequest = new MakeDepositingRequest();
+        makeDepositingRequest.setTraderId(trader.getId());
+        makeDepositingRequest.setReceivedCurrency("USD");
+        makeDepositingRequest.setReceivedAmount(1241.12);
         mockMvc.perform(post(MAKE_DEPOSITING_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("amount", String.valueOf(count))
-                        .param("currency", "USD"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(makeDepositingRequest)))
                 .andExpect(status().isOk());
         double amountAddCurrency = getBalanceByCurrency(trader.getId(),givenCurrency);
         mockMvc.perform(post(EXCHANGE_CURRENCY_URL)
-                        .param("traderId", String.valueOf(trader.getId()))
-                        .param("count", String.valueOf(130))
-                        .param("givenCurrency", givenCurrency)
-                        .param("receivedCurrency", receivedCurrency))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(currencyExchangeRequest)))
                 .andExpect(status().isOk());
         double amountAddCurrencyAfter = getBalanceByCurrency(trader.getId(),givenCurrency);
         Assertions.assertTrue(amountAddCurrency > amountAddCurrencyAfter);
