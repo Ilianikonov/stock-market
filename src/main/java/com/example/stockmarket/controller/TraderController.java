@@ -6,6 +6,7 @@ import com.example.stockmarket.controller.request.trader.UpdateTraderRequest;
 import com.example.stockmarket.controller.response.TraderResponse;
 import com.example.stockmarket.entity.Trader;
 import com.example.stockmarket.service.TraderService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name="Трейдер", description="монипулирует данными трейдера")
 public class TraderController implements TraderControllerI {
     private  final TraderService traderService;
     private final TraderConverter traderConverter;
