@@ -1,43 +1,60 @@
 package com.example.stockmarket.controller;
 
-import com.example.stockmarket.controller.converter.BalanceConverter;
 import com.example.stockmarket.controller.response.GetBalanceResponse;
-import com.example.stockmarket.entity.Balance;
-import com.example.stockmarket.service.BalanceService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+@RequestMapping("/balance")
+public interface BalanceController {
 
-@RestController
-@Slf4j
-@RequiredArgsConstructor
-@Tag(name="баланс", description="получает данные по балансу трейдера")
-public class BalanceController implements BalanceControllerI {
-    private final BalanceService balanceService;
-    private final BalanceConverter balanceConverter;
+    @Operation(summary = "получение всех балансов", description = "Позволяет получить баланс всех имеющихся валют")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "received the balance of all available currencies",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = GetBalanceResponse.class)))
+                    })
+    })
+    @GetMapping("/getTotalBalance")
+    ResponseEntity<List<GetBalanceResponse>> getTotalBalance(@RequestParam long traderId);
 
-    public ResponseEntity<List<GetBalanceResponse>> getTotalBalance(long traderId){
-        List<Balance> balances = balanceService.getTotalBalance(traderId);
-        List<GetBalanceResponse> totalBalance = balanceConverter.balanceToGetBalanceResponse(balances);
-        return new ResponseEntity<>(totalBalance, HttpStatus.OK);
-    }
+    @Operation(summary = "получение баланса валюты", description = "Позволяет получить баланс одной указаной валюты")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "received currency balance",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = GetBalanceResponse.class)))
+                    })
+    })
+    @GetMapping("/getBalanceByCurrency")
+    ResponseEntity<GetBalanceResponse> getBalanceByCurrency(@RequestParam long traderId, @RequestParam String currency);
 
-    public ResponseEntity<GetBalanceResponse> getBalanceByCurrency(long traderId, String currency){
-        Balance balance = balanceService.getBalanceByCurrency(traderId, currency);
-        GetBalanceResponse getBalanceResponse = balanceConverter.balanceToGetBalanceResponse(balance);
-        return new ResponseEntity<>(getBalanceResponse, HttpStatus.OK);
-    }
-
-    public ResponseEntity<GetBalanceResponse> getTotalBalanceByCurreny(long traderId, String currency){
-        double amount = balanceService.getTotalBalanceByCurrency(traderId, currency).getAmount();
-        GetBalanceResponse getBalanceResponse = new GetBalanceResponse();
-        getBalanceResponse.setCurrency(currency);
-        getBalanceResponse.setAmount(amount);
-        return new ResponseEntity<>(getBalanceResponse, HttpStatus.OK);
-    }
+    @Operation(summary = "получение всех балансов в одной валюте", description = "Позволяет получить общий баланс в одной указаной валюте")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "received the total balance in foreign currency",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = GetBalanceResponse.class)))
+                    })
+    })
+    @GetMapping("/getTotalBalanceByCurreny")
+    ResponseEntity<GetBalanceResponse> getTotalBalanceByCurreny(@RequestParam long traderId, @RequestParam String currency);
 }
