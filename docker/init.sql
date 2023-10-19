@@ -8,8 +8,8 @@ drop table if exists trader;
 create table trader
 (
     id       serial primary key,
-    name     varchar(12) not null unique,
-    password varchar(30) not null,
+    name     varchar not null unique,
+    password varchar not null,
     creation_date timestamp not null default CURRENT_TIMESTAMP,
     enabled boolean not null default true
 );
@@ -33,7 +33,7 @@ create index trader_name_index on trader(name);
 create table transaction_type
 (
     id serial primary key,
-    name varchar(10) not null
+    name varchar not null
 );
 
 create table transaction

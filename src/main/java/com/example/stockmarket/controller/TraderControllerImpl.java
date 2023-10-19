@@ -7,6 +7,7 @@ import com.example.stockmarket.controller.response.TraderResponse;
 import com.example.stockmarket.entity.Trader;
 import com.example.stockmarket.service.TraderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class TraderControllerImpl implements TraderController {
     private  final TraderService traderService;
     private final TraderConverter traderConverter;
 
-    public TraderResponse createTrader(CreateTraderRequest createTraderRequest){
+    public TraderResponse createTrader(@Valid CreateTraderRequest createTraderRequest){
         Trader trader = traderService.createTrader(traderConverter.convertToTrader(createTraderRequest));
         return traderConverter.convertToTrader(trader);
     }
