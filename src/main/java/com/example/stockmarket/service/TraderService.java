@@ -21,6 +21,9 @@ public class TraderService {
 
 
     public Trader createTrader(Trader trader) {
+        if (databaseTraderRepository.checkTheNameForUniqueness(trader.getName())){
+            throw new ObjectNotFoundException("Трейдер с таким именем уже существует");
+        }
         return databaseTraderRepository.createTrader(trader);
     }
 

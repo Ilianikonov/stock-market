@@ -4,7 +4,9 @@ import com.example.stockmarket.dao.mapper.TraderMapper;
 import com.example.stockmarket.entity.Trader;
 import jakarta.annotation.Nullable;
 
+import org.apache.el.parser.Node;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -29,6 +31,10 @@ public class DatabaseTraderRepository implements TraderRepository{
         jdbcTemplate.update("truncate trader");
     }
 
+    @Transactional
+    public boolean checkTheNameForUniqueness(String traderName) {
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject("SELECT EXISTS(SELECT name FROM trader WHERE name = ?)", Boolean.class, traderName));
+    }
     @Override
     @Transactional
     public Trader createTrader(Trader trader) {
