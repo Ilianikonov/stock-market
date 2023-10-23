@@ -1,11 +1,15 @@
 package com.ilianikonov.stockmarket.service;
 
+import com.example.stockmarket.exception.LoginIsOccupiedException;
 import com.ilianikonov.stockmarket.dao.DatabaseTraderRepository;
 import com.ilianikonov.stockmarket.entity.Trader;
 import com.ilianikonov.stockmarket.exception.ObjectNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class TraderService {
     private final DatabaseTraderRepository databaseTraderRepository;
     private final BalanceService balanceService;
@@ -15,13 +19,13 @@ public class TraderService {
         this.balanceService = balanceService;
     }
 
-    public void clear() {
-        databaseTraderRepository.clear();
-    }
-
-
     public Trader createTrader(Trader trader) {
-        return databaseTraderRepository.createTrader(trader);
+        try {
+            return databaseTraderRepository.createTrader(trader);
+        }catch (DataAccessException dataAccessException) {
+            log.error("при создании трейдера произошла ошибка ", dataAccessException);
+            throw new LoginIsOccupiedException("трейдер с именем "+ trader.getName() +" уже существует");
+        }
     }
 
 

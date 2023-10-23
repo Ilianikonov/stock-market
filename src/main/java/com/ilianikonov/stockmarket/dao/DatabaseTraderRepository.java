@@ -4,7 +4,9 @@ import com.ilianikonov.stockmarket.dao.mapper.TraderMapper;
 import com.ilianikonov.stockmarket.entity.Trader;
 import jakarta.annotation.Nullable;
 
+import org.apache.el.parser.Node;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
