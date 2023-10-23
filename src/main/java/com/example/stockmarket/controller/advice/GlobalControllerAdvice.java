@@ -1,6 +1,7 @@
 package com.example.stockmarket.controller.advice;
 
 import com.example.stockmarket.controller.response.ErrorResponse;
+import com.example.stockmarket.exception.LoginIsOccupiedException;
 import com.example.stockmarket.exception.NotEnoughMoneyException;
 import com.example.stockmarket.exception.ObjectNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,10 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(ObjectNotFoundException objectNotFoundException){
         return buildResponseEntity(objectNotFoundException, HttpStatus.NOT_FOUND, objectNotFoundException.getMessage());
+    }
+    @ExceptionHandler(LoginIsOccupiedException.class)
+    public ResponseEntity<ErrorResponse> handleException(LoginIsOccupiedException loginIsOccupiedException){
+        return buildResponseEntity(loginIsOccupiedException, HttpStatus.BAD_REQUEST, loginIsOccupiedException.getMessage());
     }
 
     private ResponseEntity<ErrorResponse> buildResponseEntity(Exception exception, HttpStatus httpStatus, String message){

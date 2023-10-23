@@ -31,10 +31,6 @@ public class DatabaseTraderRepository implements TraderRepository{
         jdbcTemplate.update("truncate trader");
     }
 
-    @Transactional
-    public boolean checkTheNameForUniqueness(String traderName) {
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject("SELECT EXISTS(SELECT name FROM trader WHERE name = ?)", Boolean.class, traderName));
-    }
     @Override
     @Transactional
     public Trader createTrader(Trader trader) {

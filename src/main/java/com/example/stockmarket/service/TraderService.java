@@ -2,10 +2,14 @@ package com.example.stockmarket.service;
 
 import com.example.stockmarket.dao.DatabaseTraderRepository;
 import com.example.stockmarket.entity.Trader;
+import com.example.stockmarket.exception.LoginIsOccupiedException;
 import com.example.stockmarket.exception.ObjectNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class TraderService {
     private final DatabaseTraderRepository databaseTraderRepository;
     private final BalanceService balanceService;
@@ -21,10 +25,12 @@ public class TraderService {
 
 
     public Trader createTrader(Trader trader) {
-        if (databaseTraderRepository.checkTheNameForUniqueness(trader.getName())){
-            throw new ObjectNotFoundException("Трейдер с таким именем уже существует");
+        try {
+            return databaseTraderRepository.createTrader(trader);
+        }catch (DataAccessException dataAccessException) {
+            log.error("при создании трейдера произошла ошибка ", dataAccessException);
+            throw new LoginIsOccupiedException("трейдер с именем "+ trader.getName() +" уже существует");
         }
-        return databaseTraderRepository.createTrader(trader);
     }
 
 
