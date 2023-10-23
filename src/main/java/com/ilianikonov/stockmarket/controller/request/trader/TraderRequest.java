@@ -7,13 +7,13 @@ import lombok.Data;
 import java.util.List;
 @Data
 public abstract class TraderRequest {
-    @Size(max = 20)
+    @Size(max = 12)
     @Schema(description = "уникальное имя трейдера",
             name = "name",
             type = "string")
     private String name;
-    @Size(min = 6)
-    @Size(max = 100)
+    @Size(min = 1)
+    @Size(max = 30)
     @Schema(description = "пароль трейдера",
             name = "password",
             type = "string")
@@ -24,6 +24,6 @@ public abstract class TraderRequest {
     private boolean enabled = true;
     @Schema(description = "роли трейдера",
             name = "roles",
-            type = "[string[]]")
+            type = "[string]")
     private List <String> roles;
 }

@@ -11,7 +11,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @ControllerAdvice
@@ -32,12 +34,7 @@ public class GlobalControllerAdvice {
             List<String> detailMessageArgument = (List<String>) detailMessageArguments[1];
             for (String x: detailMessageArgument) {
                 String[] tokens = x.split(": ");
-                String valueToken = "";
-                for(int i = 1; i < tokens[1].toCharArray().length - 1; i++){
-                    valueToken += tokens[1].toCharArray()[i];
-                }
-
-                data.put(tokens[0],valueToken);
+                data.put(tokens[0], tokens[1].substring(1, tokens[1].length() - 1));
             }
         }
         return data.isEmpty() ? null : data;
