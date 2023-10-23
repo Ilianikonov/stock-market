@@ -1,12 +1,9 @@
 package com.ilianikonov.stockmarket.service;
 
+import com.example.stockmarket.exception.LoginIsOccupiedException;
 import com.ilianikonov.stockmarket.dao.DatabaseTraderRepository;
 import com.ilianikonov.stockmarket.entity.Trader;
 import com.ilianikonov.stockmarket.exception.ObjectNotFoundException;
-import com.example.stockmarket.dao.DatabaseTraderRepository;
-import com.example.stockmarket.entity.Trader;
-import com.example.stockmarket.exception.LoginIsOccupiedException;
-import com.example.stockmarket.exception.ObjectNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -21,11 +18,6 @@ public class TraderService {
         this.databaseTraderRepository = databaseTraderRepository;
         this.balanceService = balanceService;
     }
-
-    public void clear() {
-        databaseTraderRepository.clear();
-    }
-
 
     public Trader createTrader(Trader trader) {
         try {
