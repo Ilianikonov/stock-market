@@ -6,6 +6,7 @@ import com.ilianikonov.stockmarket.service.TransactionService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ public class ExperimentController {
     private final TransactionService transactionService;
     private final TraderService traderService;
 
+    @RolesAllowed({"ADMIN"})
     @Operation(summary = "эксперимент добавляет 500к транзакций (пополнения депозита по 100 рублей 500 тыс раз)")
     @PostMapping("/experiment")
     public void experiment (){
@@ -30,6 +32,7 @@ public class ExperimentController {
         }
     }
 
+    @RolesAllowed({"ADMIN"})
     @Operation(summary = "эксперимент выврда 500к транзакций (выводит валюту по 10 рублей 500 тыс раз)")
     @PostMapping("/experiment2")
     public void experiment2 (){
@@ -43,6 +46,7 @@ public class ExperimentController {
         }
     }
 
+    @RolesAllowed({"ADMIN"})
     @Operation(summary = "эксперимент обмена валбты 500к транзакций (обменивает 15 рублей на доллар 500 тыс раз)")
     @PostMapping("/experiment3")
     public void experiment3 (){
