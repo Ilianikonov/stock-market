@@ -97,4 +97,15 @@ public class DatabaseTraderRepository implements TraderRepository{
         }
         return trader;
     }
+
+    @Override
+    public Trader getTraderByName(String name) {
+        Trader trader;
+        try {
+            trader = jdbcTemplate.queryForObject("select id, name, password, creation_date, enabled from trader where trader.name = ?", new TraderMapper(), name);
+        } catch (DataAccessException dataAccessException){
+            return null;
+        }
+       return trader;
+    }
 }

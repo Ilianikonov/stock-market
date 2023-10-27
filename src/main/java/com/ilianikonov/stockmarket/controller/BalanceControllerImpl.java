@@ -22,21 +22,18 @@ public class BalanceControllerImpl implements BalanceController {
     private final BalanceService balanceService;
     private final BalanceConverter balanceConverter;
 
-    @RolesAllowed({"USER", "ADMIN"})
     public ResponseEntity<List<GetBalanceResponse>> getTotalBalance(long traderId){
         List<Balance> balances = balanceService.getTotalBalance(traderId);
         List<GetBalanceResponse> totalBalance = balanceConverter.balanceToGetBalanceResponse(balances);
         return new ResponseEntity<>(totalBalance, HttpStatus.OK);
     }
 
-    @RolesAllowed({"USER", "ADMIN"})
     public ResponseEntity<GetBalanceResponse> getBalanceByCurrency(long traderId, String currency){
         Balance balance = balanceService.getBalanceByCurrency(traderId, currency);
         GetBalanceResponse getBalanceResponse = balanceConverter.balanceToGetBalanceResponse(balance);
         return new ResponseEntity<>(getBalanceResponse, HttpStatus.OK);
     }
 
-    @RolesAllowed({"USER", "ADMIN"})
     public ResponseEntity<GetBalanceResponse> getTotalBalanceByCurreny(long traderId, String currency){
         double amount = balanceService.getTotalBalanceByCurrency(traderId, currency).getAmount();
         GetBalanceResponse getBalanceResponse = new GetBalanceResponse();

@@ -21,13 +21,11 @@ public class TraderControllerImpl implements TraderController {
     private  final TraderService traderService;
     private final TraderConverter traderConverter;
 
-    @RolesAllowed({"USER", "ADMIN"})
     public TraderResponse createTrader(@Valid CreateTraderRequest createTraderRequest){
         Trader trader = traderService.createTrader(traderConverter.convertToTrader(createTraderRequest));
         return traderConverter.convertToTrader(trader);
     }
 
-    @RolesAllowed({"USER", "ADMIN"})
     public TraderResponse updateTrader (UpdateTraderRequest updateTraderRequest) {
         Trader trader = traderService.updateTrader(traderConverter.convertToTrader(updateTraderRequest));
         return traderConverter.convertToTrader(trader);
