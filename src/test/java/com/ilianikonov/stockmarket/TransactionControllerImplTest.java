@@ -185,7 +185,7 @@ public class TransactionControllerImplTest {
     public Trader createTrader (String name) {
         Trader trader = new Trader();
         trader.setName(name);
-        trader.setPassword("passworin".toCharArray());
+        trader.setPassword("passworin");
         trader.setId(traderService.createTrader(trader).getId());
         return trader;
     }

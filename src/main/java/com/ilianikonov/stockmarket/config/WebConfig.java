@@ -1,7 +1,6 @@
 package com.ilianikonov.stockmarket.config;
 
 import com.ilianikonov.stockmarket.securiti.UserDetailsServiceImpl;
-import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,12 +15,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-@Data
 public class WebConfig {
-    private final UserDetailsServiceImpl userDetailsService;
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider(PasswordEncoder passwordEncoder) {
+    public DaoAuthenticationProvider daoAuthenticationProvider(PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsService) {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
@@ -37,9 +34,11 @@ public class WebConfig {
     @Bean
     public SecurityFilterChain configureWithSecurity(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authz) -> authz
-                        .anyRequest().authenticated()
-                )
+                .csrf().disable()
+                .authorizeHttpRequests(authCustomizer -> authCustomizer
+                        .requestMatchers("/trader/createTrader").permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .httpBasic(withDefaults());
         return http.build();
     }

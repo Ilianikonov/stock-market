@@ -17,7 +17,7 @@ public abstract class TraderRequest {
     @Schema(description = "пароль трейдера",
             name = "password",
             type = "string")
-    private char[] password;
+    private String password;
     @Schema(description = "индикатор доступа",
             name = "enabled",
             type = "boolean")

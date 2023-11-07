@@ -37,7 +37,7 @@ public class TraderControllerImplTest {
     public void createTraderTest() throws Exception{
         CreateTraderRequest createTraderRequest = new CreateTraderRequest();
         createTraderRequest.setName("ilia134");
-        createTraderRequest.setPassword("Nikonov1997!".toCharArray());
+        createTraderRequest.setPassword("Nikonov1997!");
         String jsonTrader = mockMvc.perform(post(CREATE_TRADER_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createTraderRequest)))
@@ -57,7 +57,7 @@ public class TraderControllerImplTest {
         UpdateTraderRequest updateTraderRequest = new UpdateTraderRequest();
         updateTraderRequest.setId(id);
         updateTraderRequest.setName("sgsgd");
-        updateTraderRequest.setPassword("sdgdsg".toCharArray());
+        updateTraderRequest.setPassword("sdgdsg");
         mockMvc.perform(post(UP_DATE_TRADER_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateTraderRequest)))
@@ -85,7 +85,7 @@ public class TraderControllerImplTest {
     private Trader createTrader(String name, String password) throws Exception {
            CreateTraderRequest createTraderRequest = new CreateTraderRequest();
         createTraderRequest.setName(name);
-        createTraderRequest.setPassword(password.toCharArray());
+        createTraderRequest.setPassword(password);
         String jsonTrader = mockMvc.perform(post(CREATE_TRADER_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createTraderRequest)))

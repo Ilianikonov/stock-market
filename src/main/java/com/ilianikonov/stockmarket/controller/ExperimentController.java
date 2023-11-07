@@ -25,7 +25,7 @@ public class ExperimentController {
     public void experiment (){
         Trader trader = new Trader();
         trader.setName("TestTrader 1");
-        trader.setPassword("1234".toCharArray());
+        trader.setPassword("1234");
         Trader createdTrader = traderService.createTrader(trader);
         for (int i = 1; i <= 500000; i++){
             transactionService.makeDepositing(createdTrader.getId(),100,"RUB");
@@ -38,7 +38,7 @@ public class ExperimentController {
     public void experiment2 (){
         Trader trader = new Trader();
         trader.setName("TestTrader 2");
-        trader.setPassword("123456".toCharArray());
+        trader.setPassword("123456");
         Trader createdTrader = traderService.createTrader(trader);
         transactionService.makeDepositing(createdTrader.getId(),1000000000,"RUB");
         for (int i = 1; i <= 500000; i++){
@@ -52,7 +52,7 @@ public class ExperimentController {
     public void experiment3 (){
         Trader trader = new Trader();
         trader.setName("TestTrader 3");
-        trader.setPassword("12345".toCharArray());
+        trader.setPassword("12345");
         Trader createdTrader = traderService.createTrader(trader);
         transactionService.makeDepositing(createdTrader.getId(),1000000000,"RUB");
         for (int i = 1; i <= 500000; i++){

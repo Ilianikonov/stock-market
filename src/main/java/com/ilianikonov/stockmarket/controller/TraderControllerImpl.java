@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TraderControllerImpl implements TraderController {
     private  final TraderService traderService;
     private final TraderConverter traderConverter;
-
     public TraderResponse createTrader(@Valid CreateTraderRequest createTraderRequest){
         Trader trader = traderService.createTrader(traderConverter.convertToTrader(createTraderRequest));
         return traderConverter.convertToTrader(trader);

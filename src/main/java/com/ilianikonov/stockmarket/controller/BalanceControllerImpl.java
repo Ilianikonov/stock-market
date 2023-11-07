@@ -5,7 +5,6 @@ import com.ilianikonov.stockmarket.controller.response.GetBalanceResponse;
 import com.ilianikonov.stockmarket.entity.Balance;
 import com.ilianikonov.stockmarket.service.BalanceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

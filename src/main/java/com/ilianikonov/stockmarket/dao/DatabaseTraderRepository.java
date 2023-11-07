@@ -3,10 +3,8 @@ package com.ilianikonov.stockmarket.dao;
 import com.ilianikonov.stockmarket.dao.mapper.TraderMapper;
 import com.ilianikonov.stockmarket.entity.Trader;
 import jakarta.annotation.Nullable;
-
-import org.apache.el.parser.Node;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -19,6 +17,7 @@ import java.util.List;
 
 
 @Repository
+@Slf4j
 public class DatabaseTraderRepository implements TraderRepository{
     private  final JdbcTemplate jdbcTemplate;
 
@@ -39,7 +38,7 @@ public class DatabaseTraderRepository implements TraderRepository{
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, trader.getName());
-            ps.setString(2, trader.getPassword().toString());
+            ps.setString(2, trader.getPassword());
             return ps;
         }, keyHolder);
         Number key = keyHolder.getKey();
@@ -93,17 +92,21 @@ public class DatabaseTraderRepository implements TraderRepository{
             trader =  jdbcTemplate.queryForObject("select id, name, password, creation_date, enabled from trader where trader.id = ?", new TraderMapper(), id);
             trader.setRoles(jdbcTemplate.queryForList("select role.name from trader_to_role join role on role_id = role.id where trader_id = ?", String.class, id));
         } catch (DataAccessException dataAccessException){
+            log.debug("trader by id was not found", dataAccessException);
             return null;
         }
         return trader;
     }
 
     @Override
+    @Transactional
     public Trader getTraderByName(String name) {
         Trader trader;
         try {
             trader = jdbcTemplate.queryForObject("select id, name, password, creation_date, enabled from trader where trader.name = ?", new TraderMapper(), name);
+            trader.setRoles(jdbcTemplate.queryForList("select role.name from trader_to_role join role on role_id = role.id where trader_id = ?", String.class, trader.getId()));
         } catch (DataAccessException dataAccessException){
+            log.debug("trader by name was not found", dataAccessException);
             return null;
         }
        return trader;

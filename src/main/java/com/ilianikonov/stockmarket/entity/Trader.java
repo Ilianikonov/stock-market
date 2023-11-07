@@ -8,7 +8,7 @@ import java.util.List;
 public class Trader {
     private long id;
     private String name;
-    private char[] password;
+    private String password;
 
     private Date creationDate;
     private Boolean enabled;
