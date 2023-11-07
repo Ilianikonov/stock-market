@@ -1,16 +1,18 @@
 package com.ilianikonov.stockmarket;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ilianikonov.stockmarket.controller.request.transaction.MakeDepositingRequest;
 import com.ilianikonov.stockmarket.controller.request.transaction.WithdrawCurrencyRequest;
 import com.ilianikonov.stockmarket.controller.response.GetBalanceResponse;
 import com.ilianikonov.stockmarket.entity.Trader;
 import com.ilianikonov.stockmarket.service.TraderService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -28,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@EnableAutoConfiguration(exclude = { SecurityAutoConfiguration.class})
 public class BalanceControllerImplTest {
     @Autowired
     private MockMvc mockMvc;
@@ -55,7 +58,7 @@ public class BalanceControllerImplTest {
     @Test
     public void getTotalBalanceByCurreny() throws Exception{ // todo: дописать тест
         String currency = "RUB";
-        Trader trader = createTrader("aefsweveqq");
+        Trader trader = createTrader("aefs1veqq");
         double count = 1244.12;
         MakeDepositingRequest makeDepositingRequest = new MakeDepositingRequest();
         makeDepositingRequest.setTraderId(trader.getId());
@@ -107,7 +110,7 @@ public class BalanceControllerImplTest {
     }
     @Test
     public void getBalanceByCurrency() throws Exception{
-        Trader trader = createTrader("aefsweeqq");
+        Trader trader = createTrader("ae1s14q12");
         double amount = 10.4;
         String currency = "RUB";
         MakeDepositingRequest makeDepositingRequest = new MakeDepositingRequest();
@@ -133,7 +136,7 @@ public class BalanceControllerImplTest {
     public Trader createTrader (String name) {
         Trader trader = new Trader();
         trader.setName(name);
-        trader.setPassword("passworin".toCharArray());
+        trader.setPassword("passworin");
         trader.setId(traderService.createTrader(trader).getId());
         return trader;
     }

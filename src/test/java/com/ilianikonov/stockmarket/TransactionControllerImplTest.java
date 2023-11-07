@@ -16,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@EnableAutoConfiguration(exclude = { SecurityAutoConfiguration.class })
 public class TransactionControllerImplTest {
 
     @Autowired
@@ -182,7 +185,7 @@ public class TransactionControllerImplTest {
     public Trader createTrader (String name) {
         Trader trader = new Trader();
         trader.setName(name);
-        trader.setPassword("passworin".toCharArray());
+        trader.setPassword("passworin");
         trader.setId(traderService.createTrader(trader).getId());
         return trader;
     }

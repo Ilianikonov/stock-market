@@ -56,8 +56,8 @@ public class GlobalControllerAdvice {
         return buildResponseEntity(objectNotFoundException, HttpStatus.NOT_FOUND, objectNotFoundException.getMessage(), null);
     }
 
-    @ExceptionHandler(com.example.stockmarket.exception.LoginIsOccupiedException.class)
-    public ResponseEntity<ErrorResponse> handleException(com.example.stockmarket.exception.LoginIsOccupiedException loginIsOccupiedException){
+    @ExceptionHandler(com.ilianikonov.stockmarket.exception.LoginIsOccupiedException.class)
+    public ResponseEntity<ErrorResponse> handleException(com.ilianikonov.stockmarket.exception.LoginIsOccupiedException loginIsOccupiedException){
         return buildResponseEntity(loginIsOccupiedException, HttpStatus.BAD_REQUEST, loginIsOccupiedException.getMessage(), null);
     }
 

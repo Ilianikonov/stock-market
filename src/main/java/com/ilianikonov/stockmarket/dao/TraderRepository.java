@@ -9,4 +9,5 @@ public interface TraderRepository {
     Trader updateTrader(Trader trader);
     Trader deleteTraderById(long id);
     Trader getTraderById(long id);
+    Trader getTraderByName(String name);
 }
