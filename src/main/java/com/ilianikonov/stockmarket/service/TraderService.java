@@ -4,20 +4,17 @@ import com.example.stockmarket.exception.LoginIsOccupiedException;
 import com.ilianikonov.stockmarket.dao.DatabaseTraderRepository;
 import com.ilianikonov.stockmarket.entity.Trader;
 import com.ilianikonov.stockmarket.exception.ObjectNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TraderService {
     private final DatabaseTraderRepository databaseTraderRepository;
     private final BalanceService balanceService;
-
-    public TraderService(DatabaseTraderRepository databaseTraderRepository, BalanceService balanceService) {
-        this.databaseTraderRepository = databaseTraderRepository;
-        this.balanceService = balanceService;
-    }
 
     public Trader createTrader(Trader trader) {
         try {

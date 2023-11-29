@@ -1,5 +1,6 @@
 package com.ilianikonov.stockmarket;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.ilianikonov.stockmarket.controller.request.transaction.CurrencyExchangeRequest;
 import com.ilianikonov.stockmarket.controller.request.transaction.MakeDepositingRequest;
 import com.ilianikonov.stockmarket.controller.request.transaction.WithdrawCurrencyRequest;
@@ -39,10 +40,6 @@ public class TransactionControllerImplTest {
     private ObjectMapper objectMapper;
     @Autowired
     TraderService traderService;
-    @InjectMocks
-    private WebCurrencyService webCurrencyService;
-    @Mock
-    private RestTemplate restTemplate;
 
     private static final String GET_CURRENCY_URL = "/balance/getBalanceByCurrency";
     private static final String MAKE_DEPOSITING_URL = "/transaction/makeDepositing";
