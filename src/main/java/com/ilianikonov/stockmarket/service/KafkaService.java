@@ -15,6 +15,6 @@ public class KafkaService {
     }
     @KafkaListener(topics = "kafka-test", groupId = "web-25d3acb2-e08a-40a7-b33c-718f1c938404")
     void listener(Object data){
-        System.out.println(data);
+            System.out.println(data);
     }
 }
